@@ -1,2 +1,2 @@
-# The current scripts use only Python's built-in tools.
-# Add libraries here as the project needs them.
+#splitting text into chunks
+llama-index-core==0.14.26
