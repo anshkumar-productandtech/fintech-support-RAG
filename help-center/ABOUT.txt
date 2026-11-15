@@ -1,25 +1,15 @@
-Kuberix Help Center (simulated)
+Kuberix Help Center
 
-Kuberix is a fictional Indian digital payments company, created for a
-portfolio project. It is not a real company and is not affiliated with
-any real payments app, bank or fintech.
-
-These 37 help articles (22 for app users, 15 for merchants) were written
-with AI assistance (Claude) for this project, in November 2026.
-
-- Kuberix's own policies (fees, limits, settlement times, rewards, support
-  hours) are invented for the demo.
-- References to the RBI's rules for failed transactions (reversal by T+1
-  day for UPI transfers, T+5 days for merchant payments, Rs 100 per day
-  compensation for delays) follow RBI circular DPSS.CO.PD No.629/02.01.014/
-  2019-20 of September 20, 2019.
-- The 1930 helpline and cybercrime.gov.in are India's real National
-  Cybercrime reporting channels. cms.rbi.org.in is the RBI's real complaint
-  portal.
-- Web addresses ending in .example are reserved placeholders and do not
-  lead to real sites.
-
-This is not financial, legal or regulatory advice.
+37 articles:
+- 22 for app users (files c01 to c22)
+- 15 for merchants using Kuberix for Business (files m01 to m15)
 
 Format: one Markdown file per article, with front matter
 (id, title, audience, category, last_updated) between two --- lines.
+
+Failed-transaction timelines (reversal by T+1 day for UPI transfers,
+T+5 days for merchant payments, Rs 100 per day compensation for delays)
+follow RBI circular DPSS.CO.PD No.629/02.01.014/2019-20 of
+September 20, 2019.
+
+This content is not financial, legal or regulatory advice.
