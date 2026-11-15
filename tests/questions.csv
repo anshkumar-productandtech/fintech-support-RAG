@@ -1,0 +1,51 @@
+qid,question,audience,expected_id,answerable,topic
+Q01,"paisa kat gaya but payment failed dikha raha hai, kab wapas aayega?",customer,KB-C06,yes,Failed and pending
+Q02,"sent 2000 to my brother 3 days back, money debited but he didnt get it. compensation milega?",customer,KB-C06,yes,Failed and pending
+Q03,"payment stuck on pending since morning, should i pay again??",customer,KB-C05,yes,Failed and pending
+Q04,"pending payment max kitne time tak pending reh sakta hai",customer,KB-C05,yes,Failed and pending
+Q05,"galti se wrong upi id pe 5000 bhej diya, reverse kar do please",customer,KB-C07,yes,Failed and pending
+Q06,"paid shop by QR, shows successful on my side but shopkeeper says not received",customer,KB-C05,yes,Failed and pending
+Q07,"online order payment failed but 1499 cut from my account, when will i get it back",customer,KB-C06,yes,Failed and pending
+Q08,"can kuberix cancel a payment i sent to the wrong number",customer,KB-C07,yes,Failed and pending
+Q09,"website ne bola refund kar diya but mere account me abhi tak nahi aaya",customer,KB-C08,yes,Refunds
+Q10,"refund to credit card kitne din me aata hai",customer,KB-C08,yes,Refunds
+Q11,"customer ko partial refund kaise karu dashboard se",merchant,KB-M07,yes,Refunds
+Q12,"started a refund by mistake, can i cancel it",merchant,KB-M07,yes,Refunds
+Q13,"how many days after a sale can i still refund the customer",merchant,KB-M07,yes,Refunds
+Q14,"refund ka paisa kaha se katega, mere settlement se?",merchant,KB-M07,yes,Refunds
+Q15,"aaj ki sale ka paisa bank me kab aayega",merchant,KB-M04,yes,Settlements
+Q16,"settlement on hold dikha raha hai, why??",merchant,KB-M05,yes,Settlements
+Q17,"instant settlement ka charge kitna hai",merchant,KB-M04,yes,Settlements
+Q18,"settlement amount kam aaya, how do i see what got deducted",merchant,KB-M15,yes,Settlements
+Q19,"settlement failed, i changed my bank account last week",merchant,KB-M05,yes,Settlements
+Q20,"ek din me upi se max kitna bhej sakte hai",customer,KB-C04,yes,UPI and payments
+Q21,"forgot upi pin and i dont have debit card",customer,KB-C02,yes,UPI and payments
+Q22,"3 baar galat pin daala, ab payment nahi ho raha",customer,KB-C02,yes,UPI and payments
+Q23,"what is upi lite, do i need pin for it",customer,KB-C12,yes,UPI and payments
+Q24,"how do i send money using account number and ifsc",customer,KB-C03,yes,UPI and payments
+Q25,"wallet se dost ko paise kyu nahi bhej pa raha",customer,KB-C09,yes,Wallet and KYC
+Q26,"video kyc ke liye kya kya chahiye",customer,KB-C11,yes,Wallet and KYC
+Q27,"any charges if i add money to wallet with credit card?",customer,KB-C10,yes,Wallet and KYC
+Q28,"full kyc ke baad wallet me max kitna rakh sakte hai",customer,KB-C09,yes,Wallet and KYC
+Q29,"someone called as kuberix support, i shared otp and money is gone. what do i do",customer,KB-C17,yes,Safety and security
+Q30,"phone chori ho gaya, account block kaise karu",customer,KB-C18,yes,Safety and security
+Q31,"got a new number, how do i move my kuberix account to it",customer,KB-C18,yes,Safety and security
+Q32,"stranger sent me a request for 4999, should i approve it?",customer,KB-C22,yes,Safety and security
+Q33,"recharge successful dikha raha hai but plan activate nahi hua",customer,KB-C13,yes,Bills and recharges
+Q34,"paid electricity bill but board still shows unpaid, will i get late fee",customer,KB-C14,yes,Bills and recharges
+Q35,"bbps complaint kaise raise kare",customer,KB-C14,yes,Bills and recharges
+Q36,"lost my api secret, how do i get a new one",merchant,KB-M10,yes,Developers
+Q37,"payment.captured webhook not reaching my server",merchant,KB-M11,yes,Developers
+Q38,"how do i check a webhook is really from kuberix",merchant,KB-M11,yes,Developers
+Q39,"soundbox payment aane pe bol nahi raha",merchant,KB-M03,yes,Other
+Q40,"netflix ka autopay band kaise kare",customer,KB-C15,yes,Other
+Q41,"personal loan kaise milega kuberix se",customer,,no,Not covered
+Q42,"i want to apply for a kuberix credit card",customer,,no,Not covered
+Q43,"can i buy term insurance in the app",customer,,no,Not covered (near miss: insurance premium bills are covered)
+Q44,"send money to my son in dubai from kuberix",customer,,no,Not covered
+Q45,"mutual fund sip start karna hai app se",customer,,no,Not covered (near miss: AutoPay mentions SIPs)
+Q46,"digital gold kaha milega app me",customer,,no,Not covered
+Q47,"credit card bill pay karne pe cashback milega?",customer,,no,Not covered (near miss: bills and rewards exist)
+Q48,"can i open a fixed deposit with kuberix",customer,,no,Not covered
+Q49,"can i pay in dollars with upi when im abroad",customer,,no,Not covered
+Q50,"what is my cibil score, can kuberix show it",customer,,no,Not covered
