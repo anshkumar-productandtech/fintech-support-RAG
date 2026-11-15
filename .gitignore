@@ -1,0 +1,10 @@
+# Secrets: never commit these
+.env
+*.key
+
+# Files your scripts generate (anyone can rebuild them)
+data/
+
+# Python clutter
+__pycache__/
+.venv/

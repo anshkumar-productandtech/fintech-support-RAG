@@ -1,0 +1,2 @@
+# Lessons 1 to 3 use only Python's built-in tools.
+# Libraries get added here from Lesson 4.
