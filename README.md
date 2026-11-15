@@ -1,6 +1,6 @@
 # fintech-support-RAG
 
-A retrieval-augmented generation (RAG) assistant for fintech customer support, built step by step, one lesson at a time.
+A retrieval-augmented generation (RAG) assistant for fintech customer support.
 
 ## Setup
 
