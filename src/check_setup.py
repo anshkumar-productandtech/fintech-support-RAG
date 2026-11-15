@@ -14,6 +14,6 @@ else:
 if os.environ.get("GEMINI_API_KEY"):
     print("GEMINI_API_KEY: found (hidden)")
 else:
-    print("GEMINI_API_KEY: not set yet (fine until Lesson 8)")
+    print("GEMINI_API_KEY: not set yet (only needed for generating answers)")
 
-print("All good. Ready for Lesson 2.")
+print("All good. Setup is ready.")

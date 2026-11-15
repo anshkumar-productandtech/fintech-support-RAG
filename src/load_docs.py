@@ -1,4 +1,4 @@
-# Lesson 2: load Kuberix's help articles into one file.
+# Load Kuberix's help articles into one file.
 # Run it with:  python src/load_docs.py all
 import json
 import sys
