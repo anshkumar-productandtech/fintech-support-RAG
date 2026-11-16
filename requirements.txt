@@ -1,2 +1,4 @@
 #splitting text into chunks
 llama-index-core==0.14.26
+#embeddings (also installs numpy)
+fastembed==0.9.1
