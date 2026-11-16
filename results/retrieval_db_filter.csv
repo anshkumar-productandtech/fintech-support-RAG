@@ -1,0 +1,41 @@
+qid,topic,expected_id,rank,hit,top_result,question
+Q01,Failed and pending,KB-C06,1,True,KB-C06#3,"paisa kat gaya but payment failed dikha raha hai, kab wapas aayega?"
+Q02,Failed and pending,KB-C06,1,True,KB-C06#3,"sent 2000 to my brother 3 days back, money debited but he didnt get it. compensation milega?"
+Q03,Failed and pending,KB-C05,1,True,KB-C05#2,"payment stuck on pending since morning, should i pay again??"
+Q04,Failed and pending,KB-C05,2,True,KB-C14#4,pending payment max kitne time tak pending reh sakta hai
+Q05,Failed and pending,KB-C07,1,True,KB-C07#5,"galti se wrong upi id pe 5000 bhej diya, reverse kar do please"
+Q06,Failed and pending,KB-C05,1,True,KB-C05#5,"paid shop by QR, shows successful on my side but shopkeeper says not received"
+Q07,Failed and pending,KB-C06,1,True,KB-C06#3,"online order payment failed but 1499 cut from my account, when will i get it back"
+Q08,Failed and pending,KB-C07,1,True,KB-C07#2,can kuberix cancel a payment i sent to the wrong number
+Q09,Refunds,KB-C08,3,True,KB-C13#1,website ne bola refund kar diya but mere account me abhi tak nahi aaya
+Q10,Refunds,KB-C08,1,True,KB-C08#3,refund to credit card kitne din me aata hai
+Q11,Refunds,KB-M07,1,True,KB-M07#2,customer ko partial refund kaise karu dashboard se
+Q12,Refunds,KB-M07,1,True,KB-M07#6,"started a refund by mistake, can i cancel it"
+Q13,Refunds,KB-M07,1,True,KB-M07#1,how many days after a sale can i still refund the customer
+Q14,Refunds,KB-M07,2,True,KB-M05#4,"refund ka paisa kaha se katega, mere settlement se?"
+Q15,Settlements,KB-M04,2,True,KB-M05#4,aaj ki sale ka paisa bank me kab aayega
+Q16,Settlements,KB-M05,1,True,KB-M05#4,"settlement on hold dikha raha hai, why??"
+Q17,Settlements,KB-M04,1,True,KB-M04#3,instant settlement ka charge kitna hai
+Q18,Settlements,KB-M15,1,True,KB-M15#3,"settlement amount kam aaya, how do i see what got deducted"
+Q19,Settlements,KB-M05,1,True,KB-M05#3,"settlement failed, i changed my bank account last week"
+Q20,UPI and payments,KB-C04,6,False,KB-C12#2,ek din me upi se max kitna bhej sakte hai
+Q21,UPI and payments,KB-C02,1,True,KB-C02#3,forgot upi pin and i dont have debit card
+Q22,UPI and payments,KB-C02,7,False,KB-C12#2,"3 baar galat pin daala, ab payment nahi ho raha"
+Q23,UPI and payments,KB-C12,1,True,KB-C12#1,"what is upi lite, do i need pin for it"
+Q24,UPI and payments,KB-C03,1,True,KB-C03#2,how do i send money using account number and ifsc
+Q25,Wallet and KYC,KB-C09,1,True,KB-C09#2,wallet se dost ko paise kyu nahi bhej pa raha
+Q26,Wallet and KYC,KB-C11,1,True,KB-C11#1,video kyc ke liye kya kya chahiye
+Q27,Wallet and KYC,KB-C10,1,True,KB-C10#1,any charges if i add money to wallet with credit card?
+Q28,Wallet and KYC,KB-C09,1,True,KB-C09#2,full kyc ke baad wallet me max kitna rakh sakte hai
+Q29,Safety and security,KB-C17,3,True,KB-C03#6,"someone called as kuberix support, i shared otp and money is gone. what do i do"
+Q30,Safety and security,KB-C18,1,True,KB-C18#1,"phone chori ho gaya, account block kaise karu"
+Q31,Safety and security,KB-C18,1,True,KB-C18#3,"got a new number, how do i move my kuberix account to it"
+Q32,Safety and security,KB-C22,1,True,KB-C22#4,"stranger sent me a request for 4999, should i approve it?"
+Q33,Bills and recharges,KB-C13,1,True,KB-C13#2,recharge successful dikha raha hai but plan activate nahi hua
+Q34,Bills and recharges,KB-C14,1,True,KB-C14#3,"paid electricity bill but board still shows unpaid, will i get late fee"
+Q35,Bills and recharges,KB-C14,1,True,KB-C14#5,bbps complaint kaise raise kare
+Q36,Developers,KB-M10,1,True,KB-M10#5,"lost my api secret, how do i get a new one"
+Q37,Developers,KB-M11,1,True,KB-M11#6,payment.captured webhook not reaching my server
+Q38,Developers,KB-M11,1,True,KB-M11#3,how do i check a webhook is really from kuberix
+Q39,Other,KB-M03,3,True,KB-M02#2,soundbox payment aane pe bol nahi raha
+Q40,Other,KB-C15,1,True,KB-C15#1,netflix ka autopay band kaise kare
