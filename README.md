@@ -18,4 +18,4 @@ python src/check_setup.py
 
 - `src/`: Python scripts
 - `data/`: generated files (ignored by git, can be rebuilt)
-- `requirements.txt`: Python libraries (empty for now; the early scripts use only built-in tools)
+- `requirements.txt`: Python libraries
