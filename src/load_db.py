@@ -49,6 +49,7 @@ with conn:
             embedding vector(384) NOT NULL
         )
     """)
+    conn.execute("ALTER TABLE chunks ENABLE ROW LEVEL SECURITY")
 
     with conn.cursor() as cur:
         cur.executemany(
