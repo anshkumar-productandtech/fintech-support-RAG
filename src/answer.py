@@ -19,6 +19,16 @@ SOURCES = os.getenv("SOURCES", "chunks")
 SOURCE_MODES = ["chunks", "articles"]
 ARTICLE_SEARCH_K = 10
 ARTICLE_COUNT = 3
+# "on" (default): also search with a short English rewrite of the question, merge both
+# result sets by score and keep the top 5. Chunks mode only. "off" searches with the
+# question alone.
+REWRITE = os.getenv("REWRITE", "on")
+REWRITE_MODES = ["off", "on"]
+REWRITE_PROMPT = (
+    "Rewrite this Kuberix support question as a short English search query for a "
+    "help center. Translate Hindi or Hinglish words. Keep product names like UPI, "
+    "AutoPay, KYC and UPI Lite. Output only the query."
+)
 REFUSAL = "NOT_IN_HELP_CENTER"
 USAGE = 'Usage: python src/answer.py "your question" customer|merchant'
 
@@ -48,6 +58,14 @@ Rules:
 
 SQL = """
     SELECT chunk_id, doc_id, title, text
+    FROM chunks
+    WHERE audience = %(audience)s
+    ORDER BY embedding <=> %(q)s
+    LIMIT %(k)s
+"""
+
+SCORED_SQL = """
+    SELECT chunk_id, doc_id, title, text, 1 - (embedding <=> %(q)s) AS score
     FROM chunks
     WHERE audience = %(audience)s
     ORDER BY embedding <=> %(q)s
@@ -109,6 +127,47 @@ def search(question, audience, k=TOP_K):
     return [{"chunk_id": c, "doc_id": d, "title": t, "text": x} for c, d, t, x in rows]
 
 
+def scored_search(query, audience, k=TOP_K):
+    """Like search(), but each chunk also has its cosine similarity as score."""
+    import numpy as np
+
+    if audience not in AUDIENCES:
+        raise ValueError(f"audience must be one of {AUDIENCES}, got {audience!r}")
+
+    q = next(iter(_embed_model().query_embed([query])))
+    q = (q / np.linalg.norm(q)).astype(np.float32)
+
+    with _connect() as conn:
+        rows = conn.execute(SCORED_SQL, {"q": q, "audience": audience, "k": k}).fetchall()
+
+    return [
+        {"chunk_id": c, "doc_id": d, "title": t, "text": x, "score": float(sc)}
+        for c, d, t, x, sc in rows
+    ]
+
+
+def rewrite_query(question):
+    """Ask Gemini for a short English search query. Returns (query, response)."""
+    from google.genai import types
+
+    config = types.GenerateContentConfig(system_instruction=REWRITE_PROMPT, temperature=0)
+    response = _generate_with_retry(question, config)
+    return (response.text or "").strip(), response
+
+
+def rewrite_sources(question, rewritten, audience):
+    """Top 5 chunks from searching both the question and its rewrite.
+
+    A chunk found by both searches keeps its higher score.
+    """
+    best = {}
+    for query in [question, rewritten] if rewritten else [question]:
+        for c in scored_search(query, audience):
+            if c["chunk_id"] not in best or c["score"] > best[c["chunk_id"]]["score"]:
+                best[c["chunk_id"]] = c
+    return sorted(best.values(), key=lambda c: c["score"], reverse=True)[:TOP_K]
+
+
 def article_sources(question, audience):
     """Top 3 distinct articles from the top 10 chunks, in rank order, each as one source.
 
@@ -153,18 +212,35 @@ def build_prompt(question, audience, sources):
 
 def generate(prompt):
     """Call Gemini and return the raw response. Retries on 429 and 503."""
-    from google.genai import errors, types
+    from google.genai import types
+
+    config = types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT, temperature=0.2)
+    return _generate_with_retry(prompt, config)
+
+
+def _generate_with_retry(contents, config):
+    """One Gemini call, retried on 429 and 503."""
+    from google.genai import errors
 
     client = _genai_client()
-    config = types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT, temperature=0.2)
-
     for attempt in range(len(RETRY_WAITS) + 1):
         try:
-            return client.models.generate_content(model=LLM_MODEL, contents=prompt, config=config)
+            return client.models.generate_content(model=LLM_MODEL, contents=contents, config=config)
         except errors.APIError as e:
             if e.code not in RETRY_CODES or attempt == len(RETRY_WAITS):
                 raise
             time.sleep(RETRY_WAITS[attempt])
+
+
+def _token_counts(response):
+    """(input tokens, output tokens including thinking) for one Gemini response."""
+    usage = response.usage_metadata
+    if not usage:
+        return 0, 0
+    return (
+        usage.prompt_token_count or 0,
+        (usage.candidates_token_count or 0) + (usage.thoughts_token_count or 0),
+    )
 
 
 _CITATION = re.compile(r"\[(\d+(?:\s*,\s*\d+)*)\]")
@@ -178,35 +254,54 @@ def cited_numbers(answer):
     return sorted(found)
 
 
+def run_mode():
+    """The mode name for results: "rewrite" when REWRITE is on, else SOURCES."""
+    return "rewrite" if REWRITE == "on" else SOURCES
+
+
 def answer(question, audience):
     """Search, prompt, generate, and return the answer with citations, tokens and cost."""
     if SOURCES not in SOURCE_MODES:
         raise ValueError(f"SOURCES must be one of {SOURCE_MODES}, got {SOURCES!r}")
+    if REWRITE not in REWRITE_MODES:
+        raise ValueError(f"REWRITE must be one of {REWRITE_MODES}, got {REWRITE!r}")
+    if REWRITE == "on" and SOURCES != "chunks":
+        raise ValueError("REWRITE=on only works with SOURCES=chunks")
 
     start = time.perf_counter()
+    input_tokens = output_tokens = 0
+    rewritten = None
     if SOURCES == "articles":
         sources = article_sources(question, audience)
+    elif REWRITE == "on":
+        rewritten, rewrite_response = rewrite_query(question)
+        input_tokens, output_tokens = _token_counts(rewrite_response)
+        sources = rewrite_sources(question, rewritten, audience)
     else:
         sources = search(question, audience)
     response = generate(build_prompt(question, audience, sources))
     text = (response.text or "").strip()
 
-    usage = response.usage_metadata
-    input_tokens = (usage.prompt_token_count or 0) if usage else 0
-    output_tokens = (
-        (usage.candidates_token_count or 0) + (usage.thoughts_token_count or 0) if usage else 0
-    )
+    answer_in, answer_out = _token_counts(response)
+    input_tokens += answer_in
+    output_tokens += answer_out
     cost = (input_tokens * INPUT_PRICE + output_tokens * OUTPUT_PRICE) / 1_000_000
 
+    refused = text == REFUSAL
+    # Citation check: a number outside 1..len(sources) points at no source. The text is
+    # left as is; the answer is flagged for the support agent to review instead.
     cited = cited_numbers(text)
+    invalid = [] if refused else [n for n in cited if not 1 <= n <= len(sources)]
     return {
         "text": text,
-        "mode": SOURCES,
+        "mode": run_mode(),
+        "rewritten_query": rewritten,
         "doc_ids": list(dict.fromkeys(s["doc_id"] for s in sources)),
         "sources": sources,
         "cited": cited,
-        "invalid_citations": [n for n in cited if not 1 <= n <= len(sources)],
-        "refused": text == REFUSAL,
+        "invalid_citations": invalid,
+        "needs_review": bool(invalid),
+        "refused": refused,
         "input_tokens": input_tokens,
         "output_tokens": output_tokens,
         "cost_usd": cost,
@@ -220,14 +315,19 @@ if __name__ == "__main__":
 
     result = answer(sys.argv[1], sys.argv[2])
 
+    if result["rewritten_query"] is not None:
+        print(f"Rewritten query: {result['rewritten_query']}\n")
     print(result["text"])
     print(f"\nSources ({result['mode']}):")
     for i, s in enumerate(result["sources"], start=1):
         mark = "  (cited)" if i in result["cited"] else ""
         label = s["doc_id"] if result["mode"] == "articles" else s["chunk_id"]
         print(f"[{i}] {s['title']}  {label}{mark}")
-    if result["invalid_citations"]:
-        print(f"\nWarning: cites sources that don't exist: {result['invalid_citations']}")
+    if result["needs_review"]:
+        print(
+            f"\nWarning: needs review, cites sources that don't exist: "
+            f"{result['invalid_citations']} (only {len(result['sources'])} sources sent)"
+        )
     print(
         f"\nTokens: {result['input_tokens']} in, {result['output_tokens']} out"
         f"  |  Cost: ${result['cost_usd']:.6f}  |  {result['seconds']:.1f}s"

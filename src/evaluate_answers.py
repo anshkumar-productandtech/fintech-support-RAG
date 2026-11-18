@@ -2,8 +2,9 @@
 # cost, speed and the top search score.
 # Run it with:  python src/evaluate_answers.py
 #           or:  SOURCES=articles python src/evaluate_answers.py
+#           or:  REWRITE=on python src/evaluate_answers.py
 # Saves one row per question to results/answers_<mode>.csv, where <mode> is the
-# source mode answer() reports (chunks or articles).
+# mode answer() reports (chunks, articles or rewrite).
 import csv
 import math
 import os
@@ -23,13 +24,14 @@ from answer import _embed_model, answer
 
 QUESTIONS = Path("tests/questions.csv")
 RESULTS_DIR = Path("results")
-WAIT_SECONDS = 7  # Gemini free tier: 10 requests per minute
+# Gemini free tier: 10 requests per minute. REWRITE=on makes two calls per question.
+WAIT_SECONDS = 13 if answer_module.REWRITE == "on" else 7
 LONG_ANSWER = 120  # words
 
 FIELDS = [
     "qid", "mode", "answerable", "topic", "audience", "question", "refused", "top_score",
     "cited", "citations_valid", "words", "input_tokens", "output_tokens",
-    "cost_usd", "seconds", "error", "answer",
+    "cost_usd", "seconds", "error", "rewritten_query", "answer",
 ]
 
 SCORE_SQL = "SELECT 1 - (embedding <=> %(q)s) FROM chunks WHERE chunk_id = %(chunk_id)s"
@@ -127,6 +129,7 @@ def main():
                     cost_usd=r["cost_usd"],
                     seconds=r["seconds"],
                     error="",
+                    rewritten_query=r["rewritten_query"] or "",
                     answer=r["text"],
                 )
                 status = "refused" if r["refused"] else "answered"
@@ -140,7 +143,7 @@ def main():
                 out.flush()
 
     if writer is None:  # every question failed, so answer() never reported a mode
-        open_output(answer_module.SOURCES)
+        open_output(answer_module.run_mode())
     out.close()
     report(results, output_path(mode))
 

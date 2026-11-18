@@ -1,7 +1,7 @@
-# Compare the chunks-mode and articles-mode answer runs side by side.
-# Run it with:  python src/compare_runs.py
-# Reads results/answers_chunks.csv and results/answers_articles.csv
-# (written by src/evaluate_answers.py with SOURCES=chunks and SOURCES=articles).
+# Compare two answer runs side by side.
+# Run it with:  python src/compare_runs.py results/answers_chunks.csv results/answers_rewrite.csv
+# With no arguments it compares results/answers_chunks.csv and results/answers_articles.csv.
+# Both files are written by src/evaluate_answers.py. The first file is the baseline.
 import csv
 import sys
 from pathlib import Path
@@ -10,10 +10,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from evaluate_answers import LONG_ANSWER, mean, p95
 
-RUNS = {
-    "chunks": Path("results/answers_chunks.csv"),
-    "articles": Path("results/answers_articles.csv"),
-}
+DEFAULT_RUNS = [Path("results/answers_chunks.csv"), Path("results/answers_articles.csv")]
+USAGE = "Usage: python src/compare_runs.py BASELINE.csv OTHER.csv"
+
+
+def label(path):
+    """Short run name from the file name: answers_rewrite.csv -> rewrite."""
+    return path.stem.removeprefix("answers_")
 
 
 def load(path):
@@ -61,30 +64,40 @@ def summary(rows):
 
 
 def main():
-    chunks, articles = (load(p) for p in RUNS.values())
+    if len(sys.argv) == 1:
+        paths = DEFAULT_RUNS
+    elif len(sys.argv) == 3:
+        paths = [Path(a) for a in sys.argv[1:]]
+    else:
+        sys.exit(USAGE)
+    a_name, b_name = (label(p) for p in paths)
+    if a_name == b_name:
+        a_name, b_name = str(paths[0]), str(paths[1])
+    a, b = (load(p) for p in paths)
+    w = max(12, len(a_name), len(b_name))
 
     print("=== Summary ===")
-    print(f"{'':20} {'chunks':>12} {'articles':>12}")
-    for (label, a), (_, b) in zip(summary(chunks), summary(articles)):
-        print(f"{label:20} {a:>12} {b:>12}")
+    print(f"{'':20} {a_name:>{w}} {b_name:>{w}}")
+    for (lbl, x), (_, y) in zip(summary(a), summary(b)):
+        print(f"{lbl:20} {x:>{w}} {y:>{w}}")
 
-    qids = sorted(set(chunks) | set(articles))
-    changed = [q for q in qids if result(chunks.get(q)) != result(articles.get(q))]
+    qids = sorted(set(a) | set(b))
+    changed = [q for q in qids if result(a.get(q)) != result(b.get(q))]
     print(f"\n=== Refused changed between runs: {len(changed)} ===")
     for q in changed:
-        row = chunks.get(q) or articles.get(q)
-        print(f"{q}  chunks: {result(chunks.get(q)):8}  articles: {result(articles.get(q)):8}  {row['question']}")
+        row = a.get(q) or b.get(q)
+        print(f"{q}  {a_name}: {result(a.get(q)):8}  {b_name}: {result(b.get(q)):8}  {row['question']}")
 
     regressions = [
         q for q in qids
-        if q in chunks and q in articles and chunks[q]["answerable"]
-        and result(chunks[q]) == "answered" and result(articles[q]) == "refused"
+        if q in a and q in b and a[q]["answerable"]
+        and result(a[q]) == "answered" and result(b[q]) == "refused"
     ]
-    print(f"\n=== Regressions (answerable, answered in chunks, refused in articles): {len(regressions)} ===")
+    print(f"\n=== Regressions (answerable, answered in {a_name}, refused in {b_name}): {len(regressions)} ===")
     if not regressions:
         print("None.")
     for q in regressions:
-        print(f"{q}  {chunks[q]['question']}")
+        print(f"{q}  {a[q]['question']}")
 
 
 if __name__ == "__main__":
