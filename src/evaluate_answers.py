@@ -1,7 +1,9 @@
 # Run every test question through answer() and measure refusals, citations, length,
 # cost, speed and the top search score.
 # Run it with:  python src/evaluate_answers.py
-# Saves one row per question to results/answers.csv.
+#           or:  SOURCES=articles python src/evaluate_answers.py
+# Saves one row per question to results/answers_<mode>.csv, where <mode> is the
+# source mode answer() reports (chunks or articles).
 import csv
 import math
 import os
@@ -16,15 +18,16 @@ import psycopg
 from dotenv import load_dotenv
 from pgvector.psycopg import register_vector
 
+import answer as answer_module
 from answer import _embed_model, answer
 
 QUESTIONS = Path("tests/questions.csv")
-OUTPUT = Path("results/answers.csv")
+RESULTS_DIR = Path("results")
 WAIT_SECONDS = 7  # Gemini free tier: 10 requests per minute
 LONG_ANSWER = 120  # words
 
 FIELDS = [
-    "qid", "answerable", "topic", "audience", "question", "refused", "top_score",
+    "qid", "mode", "answerable", "topic", "audience", "question", "refused", "top_score",
     "cited", "citations_valid", "words", "input_tokens", "output_tokens",
     "cost_usd", "seconds", "error", "answer",
 ]
@@ -68,12 +71,32 @@ def main():
         sys.exit(f"Problem: could not connect to the database. Is it running?\n{e}")
     register_vector(conn)
 
-    OUTPUT.parent.mkdir(exist_ok=True)
+    RESULTS_DIR.mkdir(exist_ok=True)
     results = []
-    with conn, OUTPUT.open("w", newline="", encoding="utf-8") as out:
+    # The output file is named after the mode answer() reports, so it is opened
+    # after the first successful answer. Rows that fail before then wait in `pending`.
+    mode, out, writer, pending = None, None, None, []
+
+    def write(record):
+        writer.writerow({
+            **record,
+            "mode": mode,
+            "cited": ";".join(map(str, record.get("cited", []))),
+            "top_score": f"{record['top_score']:.4f}" if record.get("top_score") is not None else "",
+            "cost_usd": f"{record['cost_usd']:.6f}" if "cost_usd" in record else "",
+            "seconds": f"{record['seconds']:.2f}" if "seconds" in record else "",
+        })
+
+    def open_output(m):
+        nonlocal mode, out, writer
+        mode = m
+        out = output_path(mode).open("w", newline="", encoding="utf-8")
         writer = csv.DictWriter(out, fieldnames=FIELDS)
         writer.writeheader()
+        for r in pending:
+            write(r)
 
+    with conn:
         for i, row in enumerate(rows, start=1):
             if i > 1:
                 time.sleep(WAIT_SECONDS)
@@ -91,6 +114,8 @@ def main():
                 record.update(error=f"{type(e).__name__}: {e}", refused=None, answer="")
                 print(f"{i}/{len(rows)} {row['qid']} ERROR {type(e).__name__}")
             else:
+                if mode is None:
+                    open_output(r["mode"])
                 record.update(
                     refused=r["refused"],
                     top_score=top_score(conn, row["question"], r["sources"]),
@@ -108,19 +133,23 @@ def main():
                 print(f"{i}/{len(rows)} {row['qid']} {status} {r['seconds']:.1f}s")
 
             results.append(record)
-            writer.writerow({
-                **record,
-                "cited": ";".join(map(str, record.get("cited", []))),
-                "top_score": f"{record['top_score']:.4f}" if record.get("top_score") is not None else "",
-                "cost_usd": f"{record['cost_usd']:.6f}" if "cost_usd" in record else "",
-                "seconds": f"{record['seconds']:.2f}" if "seconds" in record else "",
-            })
-            out.flush()
+            if writer is None:
+                pending.append(record)
+            else:
+                write(record)
+                out.flush()
 
-    report(results)
+    if writer is None:  # every question failed, so answer() never reported a mode
+        open_output(answer_module.SOURCES)
+    out.close()
+    report(results, output_path(mode))
 
 
-def report(results):
+def output_path(mode):
+    return RESULTS_DIR / f"answers_{mode}.csv"
+
+
+def report(results, output):
     ok = [r for r in results if not r.get("error")]
     failed = [r for r in results if r.get("error")]
     answerable = [r for r in ok if r["answerable"]]
@@ -176,7 +205,7 @@ def report(results):
         print(f"  lowest answerable:    {low['top_score']:.3f}  ({low['qid']})")
         print(f"  highest unanswerable: {high['top_score']:.3f}  ({high['qid']})")
 
-    print(f"\nSaved {len(results)} rows to {OUTPUT}")
+    print(f"\nSaved {len(results)} rows to {output}")
 
 
 if __name__ == "__main__":
