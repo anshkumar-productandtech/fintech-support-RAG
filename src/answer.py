@@ -2,7 +2,7 @@
 # Run it with:  python src/answer.py "How do I link my bank account?" customer
 #          or:  python src/answer.py "When do I get my settlement?" merchant
 #
-# Other scripts can import search, build_prompt, generate, cited_numbers and answer.
+# Other scripts can import search, get_sources, build_prompt, generate, cited_numbers and answer.
 import os
 import re
 import sys
@@ -259,6 +259,19 @@ def run_mode():
     return "rewrite" if REWRITE == "on" else SOURCES
 
 
+def get_sources(question, audience, rewritten=None):
+    """The sources answer() sends to Gemini for this question, in order.
+
+    rewritten is the rewritten query (REWRITE=on only). Pass the saved one to rebuild a
+    past answer's sources without calling Gemini. No Gemini calls here.
+    """
+    if SOURCES == "articles":
+        return article_sources(question, audience)
+    if REWRITE == "on":
+        return rewrite_sources(question, rewritten, audience)
+    return search(question, audience)
+
+
 def answer(question, audience):
     """Search, prompt, generate, and return the answer with citations, tokens and cost."""
     if SOURCES not in SOURCE_MODES:
@@ -271,14 +284,10 @@ def answer(question, audience):
     start = time.perf_counter()
     input_tokens = output_tokens = 0
     rewritten = None
-    if SOURCES == "articles":
-        sources = article_sources(question, audience)
-    elif REWRITE == "on":
+    if SOURCES == "chunks" and REWRITE == "on":
         rewritten, rewrite_response = rewrite_query(question)
         input_tokens, output_tokens = _token_counts(rewrite_response)
-        sources = rewrite_sources(question, rewritten, audience)
-    else:
-        sources = search(question, audience)
+    sources = get_sources(question, audience, rewritten)
     response = generate(build_prompt(question, audience, sources))
     text = (response.text or "").strip()
 
