@@ -3,8 +3,9 @@
 # Run it with:  python src/evaluate_answers.py
 #           or:  SOURCES=articles python src/evaluate_answers.py
 #           or:  REWRITE=on python src/evaluate_answers.py
-# Saves one row per question to results/answers_<mode>.csv, where <mode> is the
-# mode answer() reports (chunks, articles or rewrite).
+#           or:  RUN_NAME=language_fix python src/evaluate_answers.py
+# Saves one row per question to results/answers_<mode>.csv, where <mode> is RUN_NAME
+# if set, otherwise the mode answer() reports (chunks, articles or rewrite).
 import csv
 import math
 import os
@@ -27,11 +28,13 @@ RESULTS_DIR = Path("results")
 # Gemini free tier: 10 requests per minute. REWRITE=on makes two calls per question.
 WAIT_SECONDS = 13 if answer_module.REWRITE == "on" else 7
 LONG_ANSWER = 120  # words
+# Optional name for this run, to tell apart runs that answer() reports as the same mode.
+RUN_NAME = os.environ.get("RUN_NAME", "").strip() or None
 
 FIELDS = [
     "qid", "mode", "answerable", "topic", "audience", "question", "refused", "top_score",
     "cited", "citations_valid", "words", "input_tokens", "output_tokens",
-    "cost_usd", "seconds", "error", "rewritten_query", "answer",
+    "cost_usd", "seconds", "error", "rewritten_query", "language", "answer",
 ]
 
 SCORE_SQL = "SELECT 1 - (embedding <=> %(q)s) FROM chunks WHERE chunk_id = %(chunk_id)s"
@@ -117,7 +120,7 @@ def main():
                 print(f"{i}/{len(rows)} {row['qid']} ERROR {type(e).__name__}")
             else:
                 if mode is None:
-                    open_output(r["mode"])
+                    open_output(RUN_NAME or r["mode"])
                 record.update(
                     refused=r["refused"],
                     top_score=top_score(conn, row["question"], r["sources"]),
@@ -130,6 +133,7 @@ def main():
                     seconds=r["seconds"],
                     error="",
                     rewritten_query=r["rewritten_query"] or "",
+                    language=r.get("language") or "",
                     answer=r["text"],
                 )
                 status = "refused" if r["refused"] else "answered"
@@ -143,7 +147,7 @@ def main():
                 out.flush()
 
     if writer is None:  # every question failed, so answer() never reported a mode
-        open_output(answer_module.run_mode())
+        open_output(RUN_NAME or answer_module.run_mode())
     out.close()
     report(results, output_path(mode))
 

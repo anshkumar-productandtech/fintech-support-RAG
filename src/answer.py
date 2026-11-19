@@ -27,7 +27,24 @@ REWRITE_MODES = ["off", "on"]
 REWRITE_PROMPT = (
     "Rewrite this Kuberix support question as a short English search query for a "
     "help center. Translate Hindi or Hinglish words. Keep product names like UPI, "
-    "AutoPay, KYC and UPI Lite. Output only the query."
+    "AutoPay, KYC and UPI Lite.\n\n"
+    "Also detect the question's language: english, hinglish (Hindi written in English "
+    "letters, even if mixed with English words) or hindi (Hindi in Devanagari script).\n\n"
+    "Output exactly two lines and nothing else:\n"
+    "LANGUAGE: english|hinglish|hindi\n"
+    "QUERY: <the search query>"
+)
+LANGUAGES = ["english", "hinglish", "hindi"]
+# The one instruction placed before the question once the language is known.
+REPLY_INSTRUCTIONS = {
+    "english": "Reply in English.",
+    "hinglish": "Reply in Hinglish (Hindi written in English letters).",
+    "hindi": "Reply in Hindi.",
+}
+# Used when the language is unknown (rewrite off, or the rewrite couldn't be parsed).
+DEFAULT_REMINDER = (
+    "Reminder: reply in the same language as the question and include every fee, "
+    "minimum and time limit from the sources."
 )
 REFUSAL = "NOT_IN_HELP_CENTER"
 USAGE = 'Usage: python src/answer.py "your question" customer|merchant'
@@ -147,12 +164,39 @@ def scored_search(query, audience, k=TOP_K):
 
 
 def rewrite_query(question):
-    """Ask Gemini for a short English search query. Returns (query, response)."""
+    """Ask Gemini for a short English search query and the question's language.
+
+    Returns (query, language, response). language is "english", "hinglish", "hindi",
+    or None if it couldn't be parsed.
+    """
     from google.genai import types
 
     config = types.GenerateContentConfig(system_instruction=REWRITE_PROMPT, temperature=0)
     response = _generate_with_retry(question, config)
-    return (response.text or "").strip(), response
+    query, language = parse_rewrite(response.text or "")
+    return query, language, response
+
+
+def parse_rewrite(text):
+    """Split the rewrite reply into (query, language).
+
+    Expects "LANGUAGE: ..." and "QUERY: ..." lines. If there's no QUERY line, the whole
+    reply is the query, as before. If the language is missing or not a known one, it's None.
+    """
+    query, language = None, None
+    for line in text.strip().splitlines():
+        key, sep, value = line.partition(":")
+        if not sep:
+            continue
+        key, value = key.strip().upper(), value.strip()
+        if key == "LANGUAGE" and value.lower() in LANGUAGES:
+            language = value.lower()
+        elif key == "QUERY" and value:
+            query = value
+    if query is None:
+        language = None  # the reply wasn't in the expected format, so don't trust it
+        query = text.strip()
+    return query, language
 
 
 def rewrite_sources(question, rewritten, audience):
@@ -199,13 +243,14 @@ def article_sources(question, audience):
     ]
 
 
-def build_prompt(question, audience, sources):
-    """Number the sources [1]..[n] with their article titles, then add the question."""
+def build_prompt(question, audience, sources, language=None):
+    """Number the sources [1]..[n] with their article titles, then add the question.
+
+    With a detected language, the line before the question says which language to reply
+    in. Without one, it's the general reminder.
+    """
     parts = [f"[{i}] {s['title']}\n{s['text']}" for i, s in enumerate(sources, start=1)]
-    parts.append(
-        "Reminder: reply in the same language as the question and include every fee, "
-        "minimum and time limit from the sources."
-    )
+    parts.append(REPLY_INSTRUCTIONS.get(language, DEFAULT_REMINDER))
     parts.append(f"The {audience} asks: {question}")
     return "\n\n".join(parts)
 
@@ -283,12 +328,12 @@ def answer(question, audience):
 
     start = time.perf_counter()
     input_tokens = output_tokens = 0
-    rewritten = None
+    rewritten = language = None
     if SOURCES == "chunks" and REWRITE == "on":
-        rewritten, rewrite_response = rewrite_query(question)
+        rewritten, language, rewrite_response = rewrite_query(question)
         input_tokens, output_tokens = _token_counts(rewrite_response)
     sources = get_sources(question, audience, rewritten)
-    response = generate(build_prompt(question, audience, sources))
+    response = generate(build_prompt(question, audience, sources, language))
     text = (response.text or "").strip()
 
     answer_in, answer_out = _token_counts(response)
@@ -305,6 +350,7 @@ def answer(question, audience):
         "text": text,
         "mode": run_mode(),
         "rewritten_query": rewritten,
+        "language": language,
         "doc_ids": list(dict.fromkeys(s["doc_id"] for s in sources)),
         "sources": sources,
         "cited": cited,
@@ -325,7 +371,8 @@ if __name__ == "__main__":
     result = answer(sys.argv[1], sys.argv[2])
 
     if result["rewritten_query"] is not None:
-        print(f"Rewritten query: {result['rewritten_query']}\n")
+        print(f"Rewritten query: {result['rewritten_query']}")
+        print(f"Language: {result['language'] or 'unknown (default reminder used)'}\n")
     print(result["text"])
     print(f"\nSources ({result['mode']}):")
     for i, s in enumerate(result["sources"], start=1):
