@@ -12,7 +12,15 @@ Check that your environment is ready:
 python src/check_setup.py
 ```
 
-`GEMINI_API_KEY` is needed once the assistant starts generating answers. Set it as an environment variable or put it in a `.env` file. `.env` is already in `.gitignore`, so it won't be committed.
+Put your API keys in a `.env` file (or set them as environment variables). `.env` is already in `.gitignore`, so it won't be committed.
+
+```
+GEMINI_API_KEY=
+OPENROUTER_API_KEY=
+```
+
+- `GEMINI_API_KEY`: needed once the assistant starts generating answers.
+- `OPENROUTER_API_KEY`: needed by `src/judge_answers.py`, which judges answers with a free open model on OpenRouter.
 
 ## Project layout
 
