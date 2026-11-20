@@ -1,0 +1,36 @@
+qid,judge_model,language,language_reason
+Q01,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in Hinglish (Hindi written in English letters) and the response is also in Hinglish, so the language matches the criterion."
+Q02,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in Hinglish (Hindi written in English letters) and the response is also in Hinglish, matching the language of the question."
+Q03,nvidia/nemotron-3-ultra-550b-a55b:free,y,"Both the question and response are in English, so the response matches the language of the question."
+Q04,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in Hinglish (Hindi written in English script), and the response is also in Hinglish, using Hindi words like 'tak', 'reh sakta hai', 'ke baad', 'ho toh', 'mein jayein', 'par tap karein', 'hone par', 'ke liye', 'wait karein', 'Yeh tab hota hai', 'aapke', 'ya', 'ke', 'slow hote hain', 'unhone', 'nahi kiya hota', 'Kripya', 'dubara', 'na karein', 'apne aap', 'mein update ho jayega', 'isliye' mixed with English. The language matches the criterion."
+Q05,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in Hinglish and the response is also in Hinglish, matching the language."
+Q06,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in English, and the response is also in English, so the language matches."
+Q07,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in English and the response is in English, so they match."
+Q08,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in English and the response is in English, so they match the language criterion."
+Q09,nvidia/nemotron-3-ultra-550b-a55b:free,y,"Both the question and response are in Hinglish (Hindi written in English script), using a mix of Hindi and English words like 'website ne bola', 'refund kar diya', 'account me nahi aaya' in the question, and 'Agar merchant ne', 'refund reference number', 'bank ya card statement', 'working days', 'History mein jayein', 'Raise an issue' in the response."
+Q10,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in Hinglish and the response is also in Hinglish, matching the language."
+Q11,nvidia/nemotron-3-ultra-550b-a55b:free,y,"Both the question and response are written in Hinglish (Hindi using English letters), so the response matches the language of the question."
+Q12,nvidia/nemotron-3-ultra-550b-a55b:free,y,"Both the question and the response are in English, so the language matches."
+Q13,nvidia/nemotron-3-ultra-550b-a55b:free,y,"Both the question and response are in English, so the language matches."
+Q14,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in Hinglish (Hindi written in English letters) and the response is also in Hinglish, using Hindi words in English script with some English technical terms, matching the language of the question."
+Q15,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The response is written in Hinglish (Hindi using English letters), which matches the language of the question."
+Q16,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in Hinglish (Hindi written in English letters) and the response is also in Hinglish, using the same script and language style."
+Q17,gemini-3.6-flash,y,Both the question and the response are written in Hinglish (Hindi words written in the Latin alphabet).
+Q18,gemini-3.6-flash,y,Both the question and the response are written in Hinglish (Hindi language using English script).
+Q19,gemini-3.6-flash,y,Both the question and the response are written in English.
+Q20,gemini-3.6-flash,y,"The question is written in Hinglish, and the response is also written in Hinglish."
+Q21,gemini-3.6-flash,y,"The question is in English and the response is also in English, matching the required criterion."
+Q22,gemini-3.6-flash,y,Both the question and the response are written in Hinglish (Hindi in English alphabet).
+Q23,gemini-3.6-flash,y,Both the user's question and the draft response are written in English.
+Q24,gemini-3.6-flash,y, Both the question and the response are written in English.
+Q25,gemini-3.6-flash,y,Both the question and the response are written in Hinglish.
+Q26,gemini-3.6-flash,y,"Both the question and the response are written in Hinglish, matching the required criterion."
+Q27,gemini-3.6-flash,y, Both the question and the response are written in English.
+Q28,gemini-3.6-flash,y,Both the question and the draft response are written in Hinglish.
+Q29,gemini-3.6-flash,y,The question is in English and the draft support response is also entirely in English.
+Q30,gemini-3.6-flash,y,Both the question and the response are written in Hinglish.
+Q31,gemini-3.6-flash,y,"Both the question and the response are in English, so the response meets the language criterion."
+Q32,gemini-3.6-flash,y,"Both the question and the response are written in English, matching the required language criterion."
+Q33,gemini-3.6-flash,y,"Both the question and the response are written in Hinglish, matching the required criterion."
+Q34,gemini-3.6-flash,y,Both the question and the response are written in English.
+Q35,gemini-3.6-flash,y,Both the question and the response are written in Hinglish (Hindi using Latin/English script).
