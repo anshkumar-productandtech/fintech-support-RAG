@@ -1,0 +1,176 @@
+qid,mode,answerable,topic,audience,question,refused,top_score,cited,citations_valid,words,input_tokens,output_tokens,cost_usd,seconds,error,rewritten_query,language,answer
+Q01,language_fix2,True,Failed and pending,customer,"paisa kat gaya but payment failed dikha raha hai, kab wapas aayega?",False,0.6670,1;3;4,True,109,828,184,0.000708,21.68,,money deducted but payment failed refund status,hinglish,"Jab paisa kat jata hai aur payment fail ho jata hai, toh paisa automatically aapke bank account mein wapas aa jata hai, aapko kuch karne ki zarurat nahi hai [3][4]. 
+
+Agar samay par paisa wapas na aaye, toh yeh steps follow karein:
+1. **History** mein jayein, payment par tap karein, aur **Raise an issue > Money debited, payment failed** par tap karein [1].
+2. Apna **UPI reference number** handy rakhein kyunki bank ko iski zarurat padegi [1]. Aap apne bank se direct contact karke reversal aur delay compensation bhi maang sakte hain [1].
+
+Agar aapka issue 30 din ke andar solve na ho, toh ""Complaints and escalation"" dekhein [1]."
+Q02,language_fix2,True,Failed and pending,customer,"sent 2000 to my brother 3 days back, money debited but he didnt get it. compensation milega?",False,0.7259,1;2;4,True,130,835,210,0.000776,16.52,,money debited brother not received compensation transaction failed,hinglish,"Agar paisa debit ho gaya aur payment fail ho gayi, toh paisa automatically wapas aa jata hai [2][4]. Timelines ke liye ""Money was debited but my payment failed"" section dekhein [4]. Aap bank se delay compensation ke liye bhi pooch sakte hain [1]. 
+
+Agar issue 30 din ke andar solve na ho, toh ""Complaints and escalation"" dekhein [1]. 
+
+Issue raise karne ke liye: **History** mein jayein, payment par tap karein, phir **Raise an issue > Money debited, payment failed** par tap karein [1]. Apna **UPI reference number** hamesha paas rakhein kyunki bank ko iski zaroorat padti hai [1], lekin apna UPI PIN, OTP, password ya full card number kabhi share na karein. Aap apne bank se direct contact karke reversal aur delay compensation ke liye bhi keh sakte hain [1]."
+Q03,language_fix2,True,Failed and pending,customer,"payment stuck on pending since morning, should i pay again??",False,0.8495,1;2;4;5,True,123,733,187,0.000687,15.92,,payment stuck on pending should I pay again,english,"Don't pay again yet, because if the first payment goes through, you'll have paid twice [1]. 
+
+Payments are pending when your bank or the receiver's bank hasn't confirmed it yet, which usually happens when a bank's systems are slow [5]. Almost always, payments stay pending for less than 48 hours [2]. You should wait, as most pending payments get a final status within a few hours [1]. You can check the payment in **History**, where the status updates by itself to **Successful** or **Failed** [1]. 
+
+If it is still pending after 48 hours, go to **History**, tap the payment, then tap **Raise an issue** [2]. If the payment fails after money was taken, the money comes back to your bank account automatically [4]."
+Q04,language_fix2,True,Failed and pending,customer,pending payment max kitne time tak pending reh sakta hai,False,0.7237,1;2;3;5,True,132,765,208,0.000749,11.43,,maximum time limit for pending payment,hinglish,"Payment almost always less than 48 hours tak pending reh sakta hai [1]. 
+
+Kuch ahem baatein aur time limits:
+- Agar payment 48 hours ke baad bhi pending hai, toh **History** mein jayein, payment par tap karein, aur **Raise an issue** par tap karein [1].
+- Doosri baar payment abhi na karein taaki double payment na ho [2].
+- Zyadatar pending payments kuch hi ghanto mein final status pa lete hain [2], aur status apne aap **Successful** ya **Failed** update ho jata hai [2].
+- Bills ke liye, biller ke confirm karne tak up to 3 working days tak wait karein [3].
+- Aisa tab hota hai jab aapke ya receiver ke bank ke systems slow hote hain [5].
+
+Kripya apna UPI PIN, OTP, password ya full card number share na karein."
+Q05,language_fix2,True,Failed and pending,customer,"galti se wrong upi id pe 5000 bhej diya, reverse kar do please",False,0.6611,1;3;5,True,127,825,207,0.000765,17.29,,wrong UPI id money transfer refund reversal,hinglish,"Aapka successful UPI payment cancel ya reverse nahi ho sakta hai kyunki paise receiver ke bank account mein chale gaye hain, aur sirf wahi wapas kar sakte hain [1]. 
+
+Aap yeh steps follow kar sakte hain:
+1. Agar aap receiver ko jaante hain, toh unse contact karke paise wapas bhejne ko kahein [5].
+2. App mein request raise karein: **History** mein jayein, payment par tap karein, phir **Raise an issue > Sent to wrong person** select karein. Kuberix aapki request receiver ke bank ko bhejega, jo receiver se contact karega [5].
+3. Apne bank se UPI reference number ke sath contact karein, kyunki banks receiving bank se help maang sakte hain [5]. 
+
+Next time se UPI PIN daalne se pehle Kuberix par naam zaroor check karein [3]."
+Q06,language_fix2,True,Failed and pending,customer,"paid shop by QR, shows successful on my side but shopkeeper says not received",False,0.6809,2,True,47,934,80,0.000480,15.55,,payment successful but merchant did not receive money QR code,english,"If the payment status shows **Successful**, the money has reached the receiver's bank [2]. Ask the receiver to check their bank statement, not just their app [2]. Share the 12-digit **UPI reference number** shown on the payment receipt so they can trace it with their bank [2]."
+Q07,language_fix2,True,Failed and pending,customer,"online order payment failed but 1499 cut from my account, when will i get it back",False,0.7587,1;4,True,81,849,125,0.000567,15.50,,online order payment failed money deducted refund status,english,"If your payment failed and money was debited, the money comes back to your bank account automatically [4]. To raise an issue, go to **History**, tap the payment, and tap **Raise an issue > Money debited, payment failed** [1]. Keep the **UPI reference number** handy as your bank needs it [1]. You can also contact your bank directly and ask for the reversal and the delay compensation [1]. If your issue isn't solved within 30 days, see ""Complaints and escalation"" [1]."
+Q08,language_fix2,True,Failed and pending,customer,can kuberix cancel a payment i sent to the wrong number,False,0.8575,1;2;3,True,118,805,174,0.000677,17.08,,cancel payment sent to wrong number,english,"A successful UPI payment cannot be cancelled or reversed by Kuberix [2]. The money is now in the receiver's bank account, and only they can return it [2]. 
+
+To address this, you can:
+1. Contact the receiver if you know them and ask them to send it back [1].
+2. Raise a request in the app by going to **History**, tapping the payment, and selecting **Raise an issue > Sent to wrong person** (Kuberix passes this request to the receiver's bank, which contacts the receiver) [1].
+3. Contact your own bank with the UPI reference number, as banks can ask the receiving bank to help [1]. 
+
+Always check the name Kuberix shows before entering your UPI PIN [3]."
+Q09,language_fix2,True,Refunds,customer,website ne bola refund kar diya but mere account me abhi tak nahi aaya,False,0.7065,1;3,True,110,907,178,0.000717,5.30,,refund not received in account yet,hinglish,"Aap merchant se refund reference number (jise ARN ya RRN bhi kehte hain) maango [1]. Phir us number ke liye apna bank ya card statement check karo, kyunki refunds kabhi-kabhi alag description ke sath credit hote hain [1]. 
+
+Agar refund timelines—jaise Kuberix Wallet ke liye instantly, UPI ke liye 1 se 3 working days, Debit card ke liye 5 se 7 working days, Credit card ke liye 5 se 7 working days (card statement par dikhega), aur Net banking ke liye 5 se 7 working days—beet chuki hain, toh app mein **History** par jao, original payment ko tap karo, aur **Raise an issue > Refund not received** select karo [1][3]."
+Q10,language_fix2,True,Refunds,customer,refund to credit card kitne din me aata hai,False,0.6992,1,True,29,929,50,0.000404,16.06,,credit card refund time duration,hinglish,"Credit card par refund merchant ke refund start karne ke baad 5 se 7 working days me pahuchta hai, aur yeh aapke card statement par dikhaya jata hai [1]."
+Q11,language_fix2,True,Refunds,merchant,customer ko partial refund kaise karu dashboard se,False,0.7944,1;3;5,True,93,627,162,0.000593,10.03,,how to issue partial refund from merchant dashboard,hinglish,"Customer ko partial refund karne ke liye ye steps follow karein:
+
+1. **Payments** mein jayein aur payment ko find karein [1].
+2. **Refund** par tap karein, **Partial** choose karein aur amount enter karein [1].
+3. Confirm karein. Customer ko refund reference number ke sath ek SMS mil jayega [1].
+
+Kuch zaroori baatein:
+- Aap payment ke **180 days** ke andar refund kar sakte hain [3].
+- Refunds bilkul free hain, lekin original payment fee wapas nahi milti [5].
+- Kabhi bhi apna UPI PIN, OTP, password ya full card number share na karein."
+Q12,language_fix2,True,Refunds,merchant,"started a refund by mistake, can i cancel it",False,0.8140,1,True,9,625,23,0.000245,7.28,,cancel mistaken refund request,english,"No, once confirmed, a refund cannot be cancelled [1]."
+Q13,language_fix2,True,Refunds,merchant,how many days after a sale can i still refund the customer,False,0.8524,1;2;3;4,True,92,674,128,0.000522,5.04,,refund time limit after sale,english,"You can refund a payment fully or partly up to **180 days** after the payment [1]. Once confirmed, a refund cannot be cancelled [2]. Refunds reach customers in 1 to 3 working days for UPI, instantly for Kuberix Wallet, and 5 to 7 working days for cards and net banking [3]. The refund is taken from your next settlement; if your settlement balance is too low, the refund waits for up to 7 days for enough payments to come in before failing, and you will receive an email if that happens [4]."
+Q14,language_fix2,True,Refunds,merchant,"refund ka paisa kaha se katega, mere settlement se?",False,0.6328,1;2,True,79,713,132,0.000544,5.20,,refund deduction source settlement account,hinglish,"Haan, refund ka paisa aapke **next settlement** se liya jata hai [1]. 
+
+Agar aapka settlement balance bahut kam hai, toh refund tab tak wait karta hai jab taks aaficient payments na aa jayein, maximum **7 days** ke liye, aur phir yeh fail ho jata hai [1]. Agar aisa hota hai toh aapko ek **email** milega [1]. 
+
+Aapke settlement report ka math is tarah hota hai: `net_settled = amount − fee − gst − refunds − chargebacks − adjustments` [2]."
+Q15,language_fix2,True,Settlements,merchant,aaj ki sale ka paisa bank me kab aayega,False,0.5662,1;5,True,158,807,260,0.000892,5.73,,when will today's sale settlement money be credited to bank account,hinglish,"Aapki aaj ki sale ka paisa aapke bank mein kab aayega yeh is baat par nirbhar karta hai ki aap kaun sa settlement use karte hain:
+
+- **Standard settlement:** Agar aapne Monday se Friday ke beech payment collect kiye hain, toh paisa next working day dopahar 1 baje tak aa jayega [1]. Agar Saturday, Sunday ya bank holiday ko collect kiya hai, toh uske baad wale next working day dopahar 1 baje tak aayega [1]. Payments midnight se midnight tak count hoti hain [1]. Rentals aur fees (jaise Soundbox rental) settlement se pehle deduct ho jati hain [1].
+- **Instant settlement:** Agar aap **Settlements > Instant settlement** on karte hain, toh paisa **15 minutes** ke andar 24x7 (holidays milakar) bank mein aa jata hai [5]. Iska fee **0.2%** of the amount settled plus GST hai, aur iska minimum per settlement **₹100** hai [5]. Yeh sign up ke baad ke pehle **30 days** ke liye available nahi hota [5]."
+Q16,language_fix2,True,Settlements,merchant,"settlement on hold dikha raha hai, why??",False,0.6371,1;2,True,89,817,145,0.000608,5.31,,settlement on hold status reason,hinglish,"Settlement on hold dikhane ke ye common reasons ho sakte hain [2]:
+
+- **Verification pending:** Kuch documents check ho rahe hain. Inhein **Account > Verification** mein complete karein [2].
+- **Risk review:** Unusual payment pattern jaise achanak bahut bada payment. Is review mein **3 se 5 working days** lagte hain aur hum invoices ya delivery proof mang sakte hain [2].
+- **Open chargeback:** Disputed amount tab tak hold par rehta hai jab tak chargeback decide nahi hota [2].
+
+Aap **Settlements** section mein jaakar status check kar sakte hain [1]."
+Q17,language_fix2,True,Settlements,merchant,instant settlement ka charge kitna hai,False,0.7769,1;2;4,True,67,738,121,0.000524,5.77,,instant settlement charges fees,hinglish,"Instant settlement ka charge **0.2%** of the amount settled, plus GST hai [1][2]. Iske liye minimum per settlement **₹100** hai [1]. Yeh money aapke bank mein **15 minutes** ke andar, **24x7** (holidays ko milakar) aa jata hai, lekin yeh first 30 days ke liye available nahi hai jab aap sign up karte hain [1]. Fees aapke settlement se bank mein pahunchne se pehle deduct hoti hain [4]."
+Q18,language_fix2,True,Settlements,merchant,"settlement amount kam aaya, how do i see what got deducted",False,0.7562,1;2;3;4;5,True,141,681,225,0.000767,5.83,,how to check settlement deductions and charges breakdown,hinglish,"Aap apna settlement report download kar sakte hain: **Settlements** me jayye, settlement par tap karein, fir **Download report** (CSV ya Excel) par click karein [3]. 
+
+Settlement report me har payment, refund, chargeback, aur fee deducted ki list hoti hai [1]. Fees aur GST aapke settlement se bank me pahunchne se pehle deduct ho jaate hain, aur settlement report me har payment ke liye fee aur GST dikhta hai [5].
+
+Maths yeh hoti hai: `net_settled = amount − fee − gst − refunds − chargebacks − adjustments`, jo sabhi rows par add up hota hai [2]. 
+
+Agar amount kam aaya hai, toh sabse pehle **refunds** aur **chargebacks** columns check karein, kyunki yeh settlement kam hone ka sabse common reason hain [4]. Agar fir bhi match na ho, toh **Help > Settlement issue** se UTR ke sath ticket raise kar sakte hain [4]."
+Q19,language_fix2,True,Settlements,merchant,"settlement failed, i changed my bank account last week",False,0.8174,1,True,50,759,78,0.000423,5.09,,settlement failed after changing bank account,english,"If your settlement failed, it is usually because the bank account is closed, frozen, or its details changed [1]. You can update your bank account in **Account > Bank account** [1]. A new account needs verification, which takes 1 working day [1]. Failed settlements are retried automatically after that [1]."
+Q20,language_fix2,True,UPI and payments,customer,ek din me upi se max kitna bhej sakte hai,False,0.5869,1;2;3;5,True,112,789,202,0.000742,5.92,,maximum UPI transaction limit per day,hinglish,"Kuberix par aap UPI se ek din mein maximum ₹1,00,000 tak bhej sakte hain aur maximum 20 payments kar sakte hain [1]. New phone par pehle 24 ghante ke liye total limit ₹5,000 hai [1]. Daily limits raat ko 12 baje reset hoti hain [3]. 
+
+Kyunki aapke bank ki daily limit alag ho sakti hai (jaise ₹25,000 se ₹1,00,000 tak), agar payment ""Limit exceeded"" se decline ho toh apne bank se check karein [2]. Limit se zyada ke liye bank app se NEFT, RTGS ya IMPS use karein, kyunki Kuberix individual users ki UPI limit nahi badha sakta [5]. Apna UPI PIN, OTP, password ya full card number kabhi share na karein."
+Q21,language_fix2,True,UPI and payments,customer,forgot upi pin and i dont have debit card,False,0.8928,1;2,True,82,768,118,0.000525,5.30,,forgot upi pin without debit card,english,"If you forgot your UPI PIN, follow the same steps to set or reset it and tap **Forgot UPI PIN?** [1]. You will need your debit card or Aadhaar [1]. Since you do not have a debit card, you can choose Aadhaar [2]. To use Aadhaar, enter the first 6 digits of your Aadhaar number, and your bank account must be linked to Aadhaar [2]. Then enter the OTP your bank sends by SMS and enter your new UPI PIN twice [2]."
+Q22,language_fix2,True,UPI and payments,customer,"3 baar galat pin daala, ab payment nahi ho raha",False,0.6730,2,True,44,872,81,0.000464,5.19,,wrong UPI PIN entered 3 times payment blocked,hinglish,"Aapke 3 galat PIN attempts ke baad, aapke bank ne us account ke liye UPI payments 24 ghante ke liye block kar diye hain [2]. Kuberix is block ko nahi hata sakta [2]. Kuberix aapko kabhi UPI PIN ke liye call nahi karega [2]."
+Q23,language_fix2,True,UPI and payments,customer,"what is upi lite, do i need pin for it",False,0.8361,1;4,True,45,697,81,0.000412,5.04,,what is upi lite and pin requirement,english,"UPI Lite is a small balance stored on your phone for quick, low-value payments [1]. You do not enter your UPI PIN for each payment [1]. On Kuberix, the limits are up to ₹1,000 per payment and up to a ₹5,000 UPI Lite balance [4]."
+Q24,language_fix2,True,UPI and payments,customer,how do i send money using account number and ifsc,False,0.7662,1;2,True,36,845,61,0.000406,5.17,,send money using account number and ifsc,english,"To send money to a bank account, tap **Send money > Bank account** and enter the account number and IFSC [1][2]. Then enter the amount, add an optional note, and approve with your UPI PIN [1]."
+Q25,language_fix2,True,Wallet and KYC,customer,wallet se dost ko paise kyu nahi bhej pa raha,False,0.6031,1,True,28,778,55,0.000371,5.80,,why cannot send money to friend from wallet,hinglish,"Wallet se dusre logo ko paise bhejne aur bank transfer karne ke liye Full KYC honi zaroori hai [1]. Aap ""Complete your KYC with Video KYC"" dekhein [1]."
+Q26,language_fix2,True,Wallet and KYC,customer,video kyc ke liye kya kya chahiye,False,0.6309,1;2;3;4,True,112,864,192,0.000739,6.38,,documents required for video KYC,hinglish,"Video KYC ke liye aapko yeh sab chahiye:
+- Aapka original **PAN card** (photo ya photocopy nahi chalegi) [1].
+- Aapka **Aadhaar number**, jisse aapka mobile number OTP ke liye linked ho [1].
+- Camera par sign karne ke liye ek plain safed kagaz aur pen [1].
+- Acchi light, ek stable internet connection, aur ek shaant jagah [1].
+- Call ke dauran aapka **India mein hona zaroori hai** [1].
+- Calls roz subah **9 am se raat 9 pm** tak hote hain [2].
+
+Video KYC lagbhag **5 minutes** mein Kuberix Wallet ko Full KYC mein upgrade kar deta hai [4]. Jyadatar upgrades **24 ghante** ke andar approve ho jaate hain [3]."
+Q27,language_fix2,True,Wallet and KYC,customer,any charges if i add money to wallet with credit card?,False,0.7204,1,True,51,728,81,0.000421,5.44,,credit card wallet add money charges fees,english,"Yes, adding money to your Kuberix Wallet using a credit card has a fee of 2% of the amount [1]. Meanwhile, adding money via UPI, debit card, or net banking is free [1]. UPI and debit card deposits show up instantly, while net banking can take up to 30 minutes [1]."
+Q28,language_fix2,True,Wallet and KYC,customer,full kyc ke baad wallet me max kitna rakh sakte hai,False,0.7583,1,True,25,858,51,0.000385,5.81,,Full KYC wallet balance limit,hinglish,"Full KYC ke baad Kuberix Wallet me maximum balance ₹2,00,000 tak rakh sakte hain [1]. Full KYC ke liye koi expiry nahi hoti hai [1]."
+Q29,language_fix2,True,Safety and security,customer,"someone called as kuberix support, i shared otp and money is gone. what do i do",False,0.7978,3;5,True,100,872,175,0.000699,5.96,,reported fraud scam share otp money deducted what to do,english,"To report this unauthorized payment, do these right now:
+1. Block your Kuberix account by going to **Help > Block my account** in the app, or use **kuberix.example/block** from any browser if you cannot open the app [3].
+2. Call your bank and ask them to block UPI on your account [3].
+3. Report it to the National Cybercrime Helpline by calling **1930** or filing a complaint at **cybercrime.gov.in** [3].
+4. Report it to Kuberix by going to **History**, tapping the payment, and selecting **Report fraud** [3].
+
+Please remember: Kuberix will never ask for your PIN, OTP, or password [5]."
+Q30,language_fix2,True,Safety and security,customer,"phone chori ho gaya, account block kaise karu",False,0.6535,1,True,97,916,156,0.000665,5.57,,phone lost account block Kuberix,hinglish,"Apka phone chori ho gaya hai, toh aap apne account ko block karne ke liye **kuberix.example/block** par kisi bhi browser se jaa sakte hain [1]. 
+
+Saath hi, aapko yeh steps follow karne chahiye:
+1. Apne mobile operator se bol kar apna SIM block karwaye aur usi number ka replacement SIM lein [1].
+2. Apne bank se bole ki jab tak aap dubara set up na kar lein, tab tak UPI block kar dein [1].
+
+Aapka paisa aapke bank account mein safe rehta hai aur koi bhi bina aapke UPI PIN ke UPI payments nahi kar sakta [1]."
+Q31,language_fix2,True,Safety and security,customer,"got a new number, how do i move my kuberix account to it",False,0.8673,1,True,67,981,102,0.000549,5.10,,change registered mobile number kuberix account,english,"To move your Kuberix account to your new mobile number:
+
+1. Update your new mobile number with your bank first [1].
+2. Log in to Kuberix with your new number and link your bank account again [1].
+3. Your old Kuberix account and wallet balance can be moved to the new number by going to **Help > Chat with us**, after your identity is verified first [1]."
+Q32,language_fix2,True,Safety and security,customer,"stranger sent me a request for 4999, should i approve it?",False,0.6640,1,True,36,744,58,0.000368,5.04,,stranger sent UPI request safe to approve,english,"Someone asking you to enter your UPI PIN to receive money is a common scam, and you never need a PIN to receive money [1]. Kuberix will never ask for your PIN, OTP, or password [1]."
+Q33,language_fix2,True,Bills and recharges,customer,recharge successful dikha raha hai but plan activate nahi hua,False,0.6550,1,True,105,882,170,0.000690,5.51,,recharge successful but plan not activated,hinglish,"Agar recharge successful dikha raha hai par benefit nahi mila, toh ye steps follow karein:
+
+1. Apne phone ya DTH set-top box ko restart karein, kyunki operators ko plan activate karne mein kabhi-kabhi 30 minute tak ka samay lag sakta hai [1].
+2. **History** mein jaakar recharge kiya gaya number check karein. Agar aapne galat number type kiya tha, toh recharge usi number par gaya aur use reverse nahi kiya ja sakta [1].
+3. Agar number sahi hai aur 2 ghante beet chuke hain, toh **History > Raise an issue** par tap karein. Kuberix operator se check karke 48 ghante ke andar reply karega [1]."
+Q34,language_fix2,True,Bills and recharges,customer,"paid electricity bill but board still shows unpaid, will i get late fee",False,0.7288,1;4,True,46,857,77,0.000450,5.16,,electricity bill paid but showing unpaid late fee concern,english,"Billers can take up to 3 working days to update [1][4]. Your BBPS receipt counts as proof of payment [1]. If you are charged a late fee because the biller didn't update in time, raise an issue in the app with the BBPS reference ID [1]."
+Q35,language_fix2,True,Bills and recharges,customer,bbps complaint kaise raise kare,False,0.6989,1;2;5,True,112,801,177,0.000683,5.72,,raise bbps complaint,hinglish,"BBPS complaint raise karne ke liye, **History** me payment par tap karein aur **Raise an issue** select karein [1]. Kuberix ise BBPS par register karta hai aur ek **complaint ID** deta hai [1]. BBPS complaints aam taur par **7 working days** ke andar resolve hoti hain [1]. 
+
+Ticket jaldi solve hone ke liye hamesha BBPS reference ID mention karein aur ek problem ke liye ek hi ticket rakhein [2]. Agar aapka complaint **30 days** me resolve nahi hota ya aap final reply se satisfied nahi hain, toh aap free me RBI Ombudsman (`cms.rbi.org.in`) par complaint kar sakte hain [5]. Kabhi apna UPI PIN, OTP, password ya full card number share na karein."
+Q36,language_fix2,True,Developers,merchant,"lost my api secret, how do i get a new one",False,0.7393,1;2;3,True,89,787,141,0.000589,4.74,,regenerate api secret,english,"If you lost your API secret, go to **Developers > API keys** and click **Regenerate** [1]. The old key stops working immediately, so update your server straight away [1]. 
+
+When generating new keys, go to **Developers > API keys** on business.kuberix.example, choose **Test** or **Live**, and click **Generate key** [3]. The secret is shown only once, so store it safely, for example in your server's secret manager [3]. 
+
+Note that if a team member is removed and they were a Developer, you should also regenerate your API keys [2]."
+Q37,language_fix2,True,Developers,merchant,payment.captured webhook not reaching my server,False,0.7831,1;4;5,True,101,763,160,0.000629,5.65,,payment.captured webhook not reaching server,english,"If your payment.captured webhook is not reaching your server, please try the following:
+
+1. Check **Developers > Webhooks > Logs** for the response your server sent [1]. You can also resend the webhook from here [4].
+2. Make sure your URL is public and uses HTTPS with a valid certificate [1].
+3. Check that your firewall allows requests from Kuberix [1].
+
+Please note that Kuberix retries with increasing gaps for up to **24 hours** if your server doesn't respond with 2xx; after that, the webhook is marked failed [4]. Also, ensure your server returns a **2xx status within 5 seconds** [5]."
+Q38,language_fix2,True,Developers,merchant,how do i check a webhook is really from kuberix,False,0.8514,1,True,46,834,81,0.000453,5.66,,verify kuberix webhook signature authenticity,english,"To check if a webhook is really from Kuberix, check the `X-Kuberix-Signature` header, which is an HMAC-SHA256 of the raw request body using your webhook secret [1]. Calculate this signature on your server and compare it, and reject any webhook whose signature does not match [1]."
+Q39,language_fix2,True,Other,merchant,soundbox payment aane pe bol nahi raha,False,0.7031,1;4,True,129,872,212,0.000792,6.42,,Kuberix soundbox not speaking when payment received,hinglish,"Agar Soundbox payment announce nahi kar raha hai, toh sabse pehle **Kuberix for Business** app me payment check karein. Agar wahan payment dikh raha hai, toh payment safe hai; sirf announcement fail hui hai [1]. 
+
+Yeh quick fixes try karein:
+1. Check karein ki yeh on aur charged hai ya nahi (light green honi chahiye, red matlab low battery hai, toh supplied cable se charge karein) [4].
+2. Volume check karein (**+** button ko kuch baar press karein) [4].
+3. Network check karein (network light blinking blue honi chahiye, agar off hai toh Soundbox ko window ya door ke paas le jayein aur restart karein) [4].
+4. Restart karein (power button ko 10 seconds ke liye hold karein jab tak band na ho jaye, phir dobara on karein) [4]."
+Q40,language_fix2,True,Other,customer,netflix ka autopay band kaise kare,False,0.5234,1;4,True,85,773,134,0.000567,5.33,,how to cancel Netflix AutoPay,hinglish,"Netflix ka AutoPay band karne ke liye, **Profile > AutoPay** par jayein [1]. Wahan apne mandate par tap karke ise permanently **Cancel** kar sakte hain [1]. 
+
+Cancelling se sirf aage ke charges rukte hain; yeh purane payments ko refund nahi karta, uske liye merchant se contact karein [1]. Agar cancel karne ke baad bhi charge lag jaye, toh payment ke sath **History** se ek issue raise karein [4]. Agar valid cancellation ke baad paise kate hain, toh aapke bank ko ise reverse karna hoga [4]."
+Q41,language_fix2,False,Not covered,customer,personal loan kaise milega kuberix se,True,0.6649,,True,1,944,23,0.000341,4.45,,how to get personal loan on kuberix,hinglish,NOT_IN_HELP_CENTER
+Q42,language_fix2,False,Not covered,customer,i want to apply for a kuberix credit card,True,0.8018,,True,1,859,20,0.000308,5.25,,apply for kuberix credit card,english,NOT_IN_HELP_CENTER
+Q43,language_fix2,False,Not covered (near miss: insurance premium bills are covered),customer,can i buy term insurance in the app,True,0.6313,,True,1,766,16,0.000270,5.59,,buy term insurance,english,NOT_IN_HELP_CENTER
+Q44,language_fix2,False,Not covered,customer,send money to my son in dubai from kuberix,True,0.7701,,True,1,757,19,0.000275,4.59,,send money to international contact dubai,english,NOT_IN_HELP_CENTER
+Q45,language_fix2,False,Not covered (near miss: AutoPay mentions SIPs),customer,mutual fund sip start karna hai app se,False,0.6728,2;4,True,60,743,101,0.000475,4.89,,start mutual fund sip on app,hinglish,"Mutual fund SIP start karne ke liye, aapko merchant ki website ya app par jaakar **UPI AutoPay** choose karna hoga [2][4]. Kuberix aapko merchant, maximum amount aur charging frequency ke sath ek request dikhayega [2]. Isko aapko apne UPI PIN ke sath ek baar approve karna hoga [2][4]. AutoPay se merchant aapko schedule par automatically charge kar sakta hai [4]."
+Q46,language_fix2,False,Not covered,customer,digital gold kaha milega app me,True,0.5283,,True,1,715,21,0.000267,4.52,,digital gold where to find in app,hinglish,NOT_IN_HELP_CENTER
+Q47,language_fix2,False,Not covered (near miss: bills and rewards exist),customer,credit card bill pay karne pe cashback milega?,False,0.6278,1;3;4;5,True,155,770,242,0.000836,5.44,,credit card bill payment cashback offer Kuberix,hinglish,"Sources ke mutabiq, Kuberix rewards sirf un offers par milte hain jo payment karne se pehle app mein dikhte hain [3]. Kuberix app electricity, water, gas, broadband, postpaid mobile, FASTag, insurance premium aur loan EMI bills Bharat BillPay (BBPS) ke zariye pay karta hai [5]. 
+
+Cashback ke liye kuch reasons ho sakte hain agar reward nahi mila:
+- Payment offer ke minimum amount se kam thi [3]
+- Offer maximum baar use ho chuka tha [3]
+- Payment refund ya cancel ho gayi thi [3]
+- Payment khud ko ya apne accounts ke beech ki gayi thi [3]
+
+Scratch karne ke **48 hours** ke andar cashback aapke **Kuberix Wallet** mein credit ho jata hai [1]. Wallet ka cashback expire nahi hota, par wallet KYC limits apply hoti hain [1]. Agar 48 hours baad bhi cashback nahi aaya, toh **Rewards > History** se issue raise karein [3]. Scratch cards **30 days** mein expire hote hain [4]."
+Q48,language_fix2,False,Not covered,customer,can i open a fixed deposit with kuberix,True,0.7536,,True,1,710,16,0.000253,5.16,,open fixed deposit,english,NOT_IN_HELP_CENTER
+Q49,language_fix2,False,Not covered,customer,can i pay in dollars with upi when im abroad,True,0.8023,,True,1,759,18,0.000273,4.68,,use UPI abroad international payments,english,NOT_IN_HELP_CENTER
+Q50,language_fix2,False,Not covered,customer,"what is my cibil score, can kuberix show it",True,0.7032,,True,1,866,22,0.000315,5.27,,check CIBIL score on Kuberix,english,NOT_IN_HELP_CENTER

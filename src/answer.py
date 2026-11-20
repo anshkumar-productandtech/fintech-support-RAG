@@ -35,12 +35,17 @@ REWRITE_PROMPT = (
     "QUERY: <the search query>"
 )
 LANGUAGES = ["english", "hinglish", "hindi"]
-# The one instruction placed before the question once the language is known.
+# Once the language is known, two lines go before the question: which language to reply
+# in, then the completeness reminder.
 REPLY_INSTRUCTIONS = {
     "english": "Reply in English.",
     "hinglish": "Reply in Hinglish (Hindi written in English letters).",
     "hindi": "Reply in Hindi.",
 }
+COMPLETENESS_REMINDER = (
+    "Include every fee, minimum, time limit and compensation from the sources that "
+    "applies to the question."
+)
 # Used when the language is unknown (rewrite off, or the rewrite couldn't be parsed).
 DEFAULT_REMINDER = (
     "Reminder: reply in the same language as the question and include every fee, "
@@ -246,11 +251,14 @@ def article_sources(question, audience):
 def build_prompt(question, audience, sources, language=None):
     """Number the sources [1]..[n] with their article titles, then add the question.
 
-    With a detected language, the line before the question says which language to reply
-    in. Without one, it's the general reminder.
+    With a detected language, two lines go before the question: which language to reply
+    in, and the completeness reminder. Without one, it's the general reminder.
     """
     parts = [f"[{i}] {s['title']}\n{s['text']}" for i, s in enumerate(sources, start=1)]
-    parts.append(REPLY_INSTRUCTIONS.get(language, DEFAULT_REMINDER))
+    if language in REPLY_INSTRUCTIONS:
+        parts.append(f"{REPLY_INSTRUCTIONS[language]}\n{COMPLETENESS_REMINDER}")
+    else:
+        parts.append(DEFAULT_REMINDER)
     parts.append(f"The {audience} asks: {question}")
     return "\n\n".join(parts)
 
