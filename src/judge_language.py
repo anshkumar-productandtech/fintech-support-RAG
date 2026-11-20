@@ -1,11 +1,16 @@
 # Judge only the language check on every answered question in one or more answer runs.
 # Run it with:  python src/judge_language.py results/answers_rewrite.csv results/answers_language_fix.csv
+#          or:  python src/judge_language.py --model gemini-3.5-flash-lite results/answers_rewrite.csv
+#          or:  python src/judge_language.py --qids Q03 Q20 -- results/answers_rewrite.csv
 #
-# Uses the same prompt as judge_answers.py (LANGUAGE_PROMPT, unchanged). The judge is
-# Nemotron on OpenRouter; once OpenRouter's daily limit is hit, the rest are judged with
-# gemini-3.6-flash. Each row records which model judged it.
+# Uses the same prompt as judge_answers.py (LANGUAGE_PROMPT, unchanged). By default the
+# judge is Nemotron on OpenRouter; once OpenRouter's daily limit is hit, the rest are
+# judged with gemini-3.6-flash. --model picks one judge instead, with no fallback: a
+# model starting with "gemini" uses GEMINI_API_KEY, anything else OpenRouter.
+# Each row records which model judged it.
 # Saves results/judge_language_<run>.csv per input file, merged by qid, so a rerun only
 # judges the answers that have no rating yet.
+import argparse
 import asyncio
 import csv
 import os
@@ -25,7 +30,13 @@ FALLBACK_MODEL = "gemini-3.6-flash"
 FALLBACK_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
 FALLBACK_KEY_NAME = "GEMINI_API_KEY"
 COLUMNS = ["qid", "judge_model", "language", "language_reason"]
-USAGE = "Usage: python src/judge_language.py results/answers_<run>.csv [more runs ...]"
+
+
+def endpoint(model):
+    """(base URL, key name) for a judge model."""
+    if model.startswith("gemini"):
+        return FALLBACK_URL, FALLBACK_KEY_NAME
+    return JUDGE_API_URL, JUDGE_KEY_NAME
 
 
 def is_daily_limit(exc):
@@ -56,12 +67,15 @@ def save(path, rows):
 class Judge:
     """The language metric on the current model, switching to the fallback once."""
 
-    def __init__(self):
+    def __init__(self, model=None):
         from ragas.metrics import DiscreteMetric
 
         self.metric = DiscreteMetric(name="language", allowed_values=["y", "n"], prompt=LANGUAGE_PROMPT)
         self.clients = []
-        self.use(JUDGE_MODEL, JUDGE_API_URL, JUDGE_KEY_NAME)
+        # Fall back to Gemini only with the default judge; a chosen --model is used alone.
+        self.can_fall_back = model is None
+        model = model or JUDGE_MODEL
+        self.use(model, *endpoint(model))
 
     def use(self, model, url, key_name):
         from openai import AsyncOpenAI
@@ -82,8 +96,9 @@ class Judge:
                     lambda: self.metric.ascore(llm=self.llm, user_input=question, response=response),
                 )
             except Exception as e:
-                if is_daily_limit(e) and self.model == JUDGE_MODEL:
-                    print(f"  {JUDGE_MODEL}: daily limit hit, switching to {FALLBACK_MODEL}")
+                if is_daily_limit(e) and self.can_fall_back:
+                    print(f"  {self.model}: daily limit hit, switching to {FALLBACK_MODEL}")
+                    self.can_fall_back = False
                     self.use(FALLBACK_MODEL, FALLBACK_URL, FALLBACK_KEY_NAME)
                     continue
                 raise
@@ -96,21 +111,30 @@ class Judge:
             await c.close()
 
 
+def parse_args():
+    p = argparse.ArgumentParser(description="Judge only the language check on answer runs.")
+    p.add_argument("runs", nargs="+", type=Path, help="results/answers_<run>.csv files")
+    p.add_argument("--model", help=f"judge model (default {JUDGE_MODEL}, with {FALLBACK_MODEL} as fallback)")
+    p.add_argument("--qids", nargs="+", help="judge only these qids")
+    return p.parse_args()
+
+
 async def main():
-    paths = [Path(a) for a in sys.argv[1:]]
-    if not paths:
-        sys.exit(USAGE)
+    args = parse_args()
+    paths = args.runs
     for p in paths:
         if not p.exists():
             sys.exit(f"Problem: {p} not found.")
     load_dotenv()
 
-    judge = Judge()
+    judge = Judge(args.model)
     first = True
     try:
         for path in paths:
             with path.open(encoding="utf-8") as f:
                 answered = [r for r in csv.DictReader(f) if r["refused"] == "False" and not r["error"]]
+            if args.qids:
+                answered = [r for r in answered if r["qid"] in args.qids]
             out = output_path(path)
             done = load_existing(out)
             todo = [r for r in answered if r["qid"] not in done]
