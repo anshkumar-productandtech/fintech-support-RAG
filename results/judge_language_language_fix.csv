@@ -34,3 +34,8 @@ Q32,gemini-3.6-flash,y,"Both the question and the response are written in Englis
 Q33,gemini-3.6-flash,y,"Both the question and the response are written in Hinglish, matching the required criterion."
 Q34,gemini-3.6-flash,y,Both the question and the response are written in English.
 Q35,gemini-3.6-flash,y,Both the question and the response are written in Hinglish (Hindi using Latin/English script).
+Q36,nvidia/nemotron-3-ultra-550b-a55b:free,y,"Both the question and response are in English, so the language matches."
+Q37,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in English and the response is also in English, so the language matches."
+Q38,nvidia/nemotron-3-ultra-550b-a55b:free,y,"Both the question and response are in English, so the response matches the language of the question."
+Q39,nvidia/nemotron-3-ultra-550b-a55b:free,y,"Both the question and response are in Hinglish (Hindi written in English script). The question uses Hinglish phrases like 'soundbox payment aane pe bol nahi raha' and the response continues in the same language with phrases like 'Sabse pehle Kuberix for Business app me payment check karein', 'Quick fixes try karein', 'Check karein ki ye on aur charged hai ya nahi', etc."
+Q40,nvidia/nemotron-3-ultra-550b-a55b:free,y,"The question is in Hinglish (Hindi written in English letters) and the response is also in Hinglish, matching the language of the question."
