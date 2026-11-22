@@ -95,9 +95,13 @@ HINGLISH_SHARING_PATTERN = re.compile(
 # "act now" reply, also with no Gemini calls. Checked before the credential question.
 # "paisa kat gaya" alone is a failed payment, so it isn't a loss phrase.
 FRAUD_CREDENTIAL_PATTERN = re.compile(r"\b(?:otp|pin|password|cvv|card\s+number)\b")
-ENGLISH_SHARED_PATTERN = re.compile(r"\b(?:shared|gave|given|told|entered|typed)\b")
-HINGLISH_SHARED_PATTERN = re.compile(
-    r"\b(?:de\s+diya|bata\s+diya|share\s+kar\s+diya|daal\s+diya)\b"
+ENGLISH_SHARED_PATTERN = re.compile(r"\b(?:shared|gave|given|told)\b")
+HINGLISH_SHARED_PATTERN = re.compile(r"\b(?:de\s+diya|bata\s+diya|share\s+kar\s+diya)\b")
+# "entered my PIN" is also how a normal payment goes, so these count only with a scam word.
+ENGLISH_ENTERED_PATTERN = re.compile(r"\b(?:entered|typed)\b")
+HINGLISH_ENTERED_PATTERN = re.compile(r"\bdaal\s+diya\b")
+SCAM_CONTEXT_PATTERN = re.compile(
+    r"\b(?:link|call|called|caller|someone|stranger|screen|app\s+install|bola|bol\s+raha)\b"
 )
 ENGLISH_LOSS_PATTERN = re.compile(
     r"\b(?:money\s+is\s+gone|money\s+gone|unauthori[sz]ed\s+payment"
@@ -453,14 +457,18 @@ def _fraud_triggers(question):
     """(english, hinglish): whether an English or a Hinglish phrase marks a fraud victim.
 
     A phrase is a past-tense sharing word with a credential word, or a money-loss phrase.
+    "entered", "typed" and "daal diya" also need a scam-context word.
     """
     q = question.lower()
     credential = bool(FRAUD_CREDENTIAL_PATTERN.search(q))
+    scam = bool(SCAM_CONTEXT_PATTERN.search(q))
     english = bool(ENGLISH_LOSS_PATTERN.search(q)) or (
-        credential and bool(ENGLISH_SHARED_PATTERN.search(q))
+        credential
+        and bool(ENGLISH_SHARED_PATTERN.search(q) or (scam and ENGLISH_ENTERED_PATTERN.search(q)))
     )
     hinglish = bool(HINGLISH_LOSS_PATTERN.search(q)) or (
-        credential and bool(HINGLISH_SHARED_PATTERN.search(q))
+        credential
+        and bool(HINGLISH_SHARED_PATTERN.search(q) or (scam and HINGLISH_ENTERED_PATTERN.search(q)))
     )
     return english, hinglish
 
