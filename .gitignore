@@ -8,3 +8,8 @@ data/
 # Python clutter
 __pycache__/
 .venv/
+
+# Embedding model downloaded by scripts/download_model.py
+model_cache/
+.vercel
+.env*
