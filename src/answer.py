@@ -100,8 +100,11 @@ HINGLISH_SHARED_PATTERN = re.compile(r"\b(?:de\s+diya|bata\s+diya|share\s+kar\s+
 # "entered my PIN" is also how a normal payment goes, so these count only with a scam word.
 ENGLISH_ENTERED_PATTERN = re.compile(r"\b(?:entered|typed)\b")
 HINGLISH_ENTERED_PATTERN = re.compile(r"\bdaal\s+diya\b")
+# Link phrases, not the bare word: "link my bank account" is a normal question.
 SCAM_CONTEXT_PATTERN = re.compile(
-    r"\b(?:link|call|called|caller|someone|stranger|screen|app\s+install|bola|bol\s+raha)\b"
+    r"\b(?:a\s+link|the\s+link|sent\s+me\s+a\s+link|clicked\s+a\s+link|clicked\s+the\s+link"
+    r"|link\s+pe|link\s+bheja|link\s+par"
+    r"|call|called|caller|someone|stranger|screen|app\s+install|bola|bol\s+raha)\b"
 )
 ENGLISH_LOSS_PATTERN = re.compile(
     r"\b(?:money\s+is\s+gone|money\s+gone|unauthori[sz]ed\s+payment"

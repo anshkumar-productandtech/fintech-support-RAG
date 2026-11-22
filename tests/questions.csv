@@ -55,3 +55,4 @@ Q53,"someone from Kuberix asked for my login OTP on a call, should i give it?",m
 Q54,"maine OTP bata diya aur paise chale gaye, ab kya karu?",customer,KB-C17,yes,Safety
 Q55,"I entered my UPI PIN but the payment failed",customer,KB-C06,yes,Failed and pending
 Q56,"pin daal diya phir bhi payment fail ho gaya",customer,KB-C06,yes,Failed and pending
+Q57,"I entered my UPI PIN to link my bank account",customer,KB-C01,yes,Account and KYC
