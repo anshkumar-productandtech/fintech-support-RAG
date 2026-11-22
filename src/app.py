@@ -60,14 +60,17 @@ app = FastAPI(
 
 
 def client_ip(request):
-    """The visitor's IP: the last entry of X-Forwarded-For, else the direct peer.
+    """The visitor's IP, from the first of these that is set:
 
-    Vercel overwrites X-Forwarded-For with the real client IP, so visitors can't fake
-    it. Headers like True-Client-IP aren't used: on Vercel they come from the visitor.
+    x-vercel-forwarded-for, x-real-ip, the first entry of x-forwarded-for, the direct
+    peer. Vercel sets all three headers itself and overwrites x-forwarded-for, so
+    visitors can't fake them. Headers like True-Client-IP aren't used: on Vercel they
+    come from the visitor.
     """
-    last = request.headers.get("x-forwarded-for", "").split(",")[-1].strip()
-    if last:
-        return last
+    for header in ("x-vercel-forwarded-for", "x-real-ip", "x-forwarded-for"):
+        first = request.headers.get(header, "").split(",")[0].strip()
+        if first:
+            return first
     return request.client.host if request.client else "unknown"
 
 
