@@ -49,3 +49,6 @@ Q47,"credit card bill pay karne pe cashback milega?",customer,,no,Not covered (n
 Q48,"can i open a fixed deposit with kuberix",customer,,no,Not covered
 Q49,"can i pay in dollars with upi when im abroad",customer,,no,Not covered
 Q50,"what is my cibil score, can kuberix show it",customer,,no,Not covered
+Q51,"Kuberix support called and asked for my OTP to fix a refund, should I share it?",customer,KB-C17,yes,Safety
+Q52,"koi Kuberix se bol raha hai OTP bata do refund ke liye, bataun kya?",customer,KB-C17,yes,Safety
+Q53,"someone from Kuberix asked for my login OTP on a call, should i give it?",merchant,KB-M13,yes,Safety

@@ -77,6 +77,50 @@ OUT_OF_SCOPE_TERMS = {
     "gold": r"\bgold\b",
     "international transfer": r"\binternational\s+(?:money\s+)?transfers?\b",
 }
+# Safety answer: a question that mentions a credential AND sharing or asking for it
+# ("should I share my OTP?") gets a fixed reply, with no Gemini calls. Checked on the
+# lowercased question. "forgot upi pin" or "3 baar galat pin daala" have no sharing
+# word, so they go through the normal answer.
+CREDENTIAL_PATTERN = re.compile(
+    r"\b(?:otp|upi\s+pin|pin|password|cvv|card\s+number"
+    r"|screen[\s-]?shar(?:e|ing)|anydesk|teamviewer)\b"
+)
+ENGLISH_SHARING_PATTERN = re.compile(
+    r"\b(?:share|give|tell|send|ask|asked|asking)\b"
+)
+HINGLISH_SHARING_PATTERN = re.compile(
+    r"\b(?:bata|batao|bataun|de\s+do|du|dena|maang|mang|bhej)\b"
+)
+# Each source is the chunk of that article whose text contains the marker.
+SAFETY_SOURCES = {
+    "customer": [("KB-C17", "## Common scams"), ("KB-C17", "## Do these right now")],
+    "merchant": [("KB-M13", "Kuberix will never ask for your OTP or password by phone")],
+}
+SAFETY_REPLIES = {
+    ("customer", "english"): (
+        "Don't share it. Kuberix will never ask for your PIN, OTP or password, and a "
+        "caller who says they're from Kuberix and asks for an OTP is a common scam [1]. "
+        "If you've already shared it, act now: block your Kuberix account from Help > "
+        "Block my account, call your bank to block UPI, and report it to the National "
+        "Cybercrime Helpline on 1930 [2]."
+    ),
+    ("customer", "hinglish"): (
+        "OTP share mat kijiye. Kuberix kabhi aapka PIN, OTP ya password nahi maangta, "
+        "aur Kuberix ke naam se call karke OTP maangna ek common scam hai [1]. Agar "
+        "aapne share kar diya hai, toh turant Help > Block my account se apna Kuberix "
+        "account block karein, bank ko call karke UPI block karwayein, aur 1930 "
+        "(National Cybercrime Helpline) par report karein [2]."
+    ),
+    ("merchant", "english"): (
+        "Don't share it. Kuberix will never ask for your OTP or password by phone [1]."
+    ),
+}
+SAFETY_SQL = """
+    SELECT chunk_id, doc_id, title, text
+    FROM chunks
+    WHERE doc_id = %(doc_id)s AND strpos(text, %(marker)s) > 0
+    ORDER BY split_part(chunk_id, '#', 2)::int
+"""
 USAGE = 'Usage: python src/answer.py "your question" customer|merchant'
 
 # US$ per 1 million tokens.
@@ -321,6 +365,69 @@ def out_of_scope_terms(question):
     return [name for name, pattern in OUT_OF_SCOPE_TERMS.items() if re.search(pattern, q)]
 
 
+def _sharing_text(question):
+    """The lowercased question with its credential words blanked out.
+
+    So the "sharing" in "screen sharing" doesn't also count as the sharing word.
+    """
+    return CREDENTIAL_PATTERN.sub(" ", question.lower())
+
+
+def is_credential_question(question):
+    """True if the question mentions a credential and sharing or asking for it."""
+    if not CREDENTIAL_PATTERN.search(question.lower()):
+        return False
+    rest = _sharing_text(question)
+    return bool(ENGLISH_SHARING_PATTERN.search(rest) or HINGLISH_SHARING_PATTERN.search(rest))
+
+
+def safety_language(question, audience):
+    """hinglish for a customer question with a Hinglish sharing word, else english."""
+    if audience == "customer" and HINGLISH_SHARING_PATTERN.search(_sharing_text(question)):
+        return "hinglish"
+    return "english"
+
+
+def safety_sources(audience):
+    """The safety answer's sources, found by their text, in citation order."""
+    sources = []
+    with _connect() as conn:
+        for doc_id, marker in SAFETY_SOURCES[audience]:
+            rows = conn.execute(SAFETY_SQL, {"doc_id": doc_id, "marker": marker}).fetchall()
+            if not rows:
+                raise RuntimeError(f"No {doc_id} chunk contains {marker!r}")
+            c, d, t, x = rows[0]
+            sources.append({"chunk_id": c, "doc_id": d, "title": t, "text": x})
+    return sources
+
+
+def safety_answer(question, audience, start):
+    """The fixed reply for a credential question, in answer()'s result shape. No Gemini."""
+    language = safety_language(question, audience)
+    sources = safety_sources(audience)
+    text = SAFETY_REPLIES[(audience, language)]
+    return {
+        "text": text,
+        "mode": run_mode(),
+        "rewritten_query": None,
+        "language": language,
+        "doc_ids": list(dict.fromkeys(s["doc_id"] for s in sources)),
+        "sources": sources,
+        "cited": cited_numbers(text),
+        "invalid_citations": [],
+        "needs_review": False,
+        "review_reasons": [],
+        "out_of_scope_terms": out_of_scope_terms(question),
+        "decision": None,
+        "refused": False,
+        "safety_answer": True,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_usd": 0.0,
+        "seconds": time.perf_counter() - start,
+    }
+
+
 def generate(prompt):
     """Call Gemini and return the raw response. Retries on 429 and 503."""
     from google.genai import types
@@ -395,6 +502,10 @@ def answer(question, audience):
         raise ValueError(f"DECIDE_FIRST must be one of {DECIDE_MODES}, got {DECIDE_FIRST!r}")
 
     start = time.perf_counter()
+    if audience not in AUDIENCES:
+        raise ValueError(f"audience must be one of {AUDIENCES}, got {audience!r}")
+    if is_credential_question(question):
+        return safety_answer(question, audience, start)
     input_tokens = output_tokens = 0
     rewritten = language = None
     if SOURCES == "chunks" and REWRITE == "on":
@@ -444,6 +555,7 @@ def answer(question, audience):
         "out_of_scope_terms": out_of_scope,
         "decision": decision,
         "refused": refused,
+        "safety_answer": False,
         "input_tokens": input_tokens,
         "output_tokens": output_tokens,
         "cost_usd": cost,

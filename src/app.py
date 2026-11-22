@@ -171,6 +171,7 @@ def api_answer(req: AnswerRequest, request: Request):
     return {
         "reply": reply,
         "refused": result["refused"],
+        "safety_answer": result["safety_answer"],
         "sources": [
             {
                 "number": i,
