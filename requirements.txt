@@ -8,6 +8,11 @@ pgvector==0.5.1
 python-dotenv==1.2.3
 # Gemini
 google-genai==3.4.0
+# Web app (fastapi, uvicorn, and the packages fastapi pulled in)
+fastapi==0.162.2
+uvicorn==0.54.0
+starlette==1.10.0
+opentelemetry-api==1.45.2
 # Ragas judge (ragas, openai, and the packages ragas pulled in)
 annotated-doc==0.0.7
 appdirs==1.4.4

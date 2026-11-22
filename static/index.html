@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuberix Support Copilot</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a1a;
+    background: #f4f5f7;
+  }
+  main { padding: 16px; max-width: 720px; margin: 0 auto; }
+  @media (min-width: 769px) { main { padding: 32px 0; } }
+
+  header { margin-bottom: 20px; }
+  h1 { font-size: 1.375rem; margin: 0; }
+  .sub { margin: 2px 0 0; font-size: 0.875rem; color: #6b7280; }
+
+  button {
+    font: inherit;
+    min-height: 44px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+  .toggle button {
+    flex: 1;
+    min-height: 52px;
+    font-weight: 600;
+    border: 2px solid #d1d5db;
+    background: #fff;
+    color: #374151;
+  }
+  .toggle button[aria-pressed="true"] {
+    border-color: #1d4ed8;
+    background: #1d4ed8;
+    color: #fff;
+  }
+
+  label { display: block; font-weight: 600; margin-bottom: 6px; }
+  textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    font: inherit;
+    font-size: 16px; /* 16px or more stops iPhone zooming in */
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    resize: vertical;
+    background: #fff;
+  }
+  textarea:focus { outline: 2px solid #1d4ed8; outline-offset: 1px; }
+  .count { text-align: right; font-size: 0.8125rem; color: #6b7280; margin: 4px 0 12px; }
+  .count.over { color: #b91c1c; }
+
+  .primary {
+    width: 100%;
+    min-height: 52px;
+    border: 0;
+    background: #1d4ed8;
+    color: #fff;
+    font-weight: 600;
+  }
+  .primary:disabled { background: #93a3c9; cursor: wait; }
+  .loading { text-align: center; color: #4b5563; margin: 12px 0 0; }
+
+  #result { margin-top: 24px; }
+  .banner {
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .banner strong { display: block; }
+  .banner ul { margin: 6px 0 0; padding-left: 20px; }
+
+  .refused {
+    background: #fff;
+    border: 2px solid #b91c1c;
+    border-radius: 12px;
+    padding: 16px;
+    font-weight: 600;
+    color: #991b1b;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .reply { margin: 0 0 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .copy {
+    width: 100%;
+    border: 1px solid #1d4ed8;
+    background: #fff;
+    color: #1d4ed8;
+    font-weight: 600;
+  }
+
+  h2 { font-size: 1rem; margin: 20px 0 8px; }
+  .sources { display: flex; flex-direction: column; gap: 6px; }
+  details {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+  }
+  summary {
+    min-height: 44px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  summary .cid { font-weight: 400; color: #6b7280; font-size: 0.875rem; }
+  details > div { padding: 0 14px 12px; }
+  details .title { margin: 0; }
+  details .section { margin: 2px 0 0; color: #4b5563; font-size: 0.9375rem; }
+
+  .meta { margin-top: 16px; font-size: 0.8125rem; color: #6b7280; }
+  .error { color: #b91c1c; margin-top: 16px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Kuberix Support Copilot</h1>
+    <p class="sub">Drafts for agent review</p>
+  </header>
+
+  <form id="form">
+    <div class="toggle" role="group" aria-label="Audience">
+      <button type="button" data-audience="customer" aria-pressed="true">Customer</button>
+      <button type="button" data-audience="merchant" aria-pressed="false">Merchant</button>
+    </div>
+
+    <label for="question">Question</label>
+    <textarea id="question" maxlength="500" placeholder="Paste the customer's question"></textarea>
+    <div class="count" id="count">0 / 500</div>
+
+    <button type="submit" class="primary" id="submit">Draft reply</button>
+    <p class="loading" id="loading" hidden>Drafting… usually 10 to 20 s</p>
+  </form>
+
+  <section id="result" hidden aria-live="polite"></section>
+  <p class="error" id="error" hidden role="alert"></p>
+</main>
+
+<script>
+  const MAX = 500;
+  const REASONS = {
+    invalid_citation: "Cites a source that doesn't exist",
+    invalid_citations: "Cites a source that doesn't exist",
+    out_of_scope_product: "Mentions a product Kuberix doesn't offer",
+  };
+
+  const form = document.getElementById("form");
+  const question = document.getElementById("question");
+  const count = document.getElementById("count");
+  const submit = document.getElementById("submit");
+  const loading = document.getElementById("loading");
+  const result = document.getElementById("result");
+  const error = document.getElementById("error");
+  const toggles = document.querySelectorAll(".toggle button");
+  let audience = "customer";
+
+  toggles.forEach((b) => b.addEventListener("click", () => {
+    audience = b.dataset.audience;
+    toggles.forEach((t) => t.setAttribute("aria-pressed", String(t === b)));
+  }));
+
+  question.addEventListener("input", () => {
+    const n = question.value.length;
+    count.textContent = `${n} / ${MAX}`;
+    count.classList.toggle("over", n > MAX);
+  });
+
+  function el(tag, attrs = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) node[k] = v;
+    node.append(...children);
+    return node;
+  }
+
+  function render(data) {
+    result.replaceChildren();
+
+    if (data.needs_review) {
+      const list = el("ul");
+      data.review_reasons.forEach((r) => list.append(el("li", {}, REASONS[r] || r)));
+      result.append(el("div", { className: "banner", role: "status" },
+        el("strong", {}, "⚠ Needs review before sending"), list));
+    }
+
+    if (data.refused) {
+      result.append(el("div", { className: "refused" },
+        "Not in the help center: escalate to a specialist"));
+    } else {
+      const copy = el("button", { type: "button", className: "copy" }, "Copy reply");
+      copy.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(data.reply);
+          copy.textContent = "Copied";
+        } catch {
+          copy.textContent = "Couldn't copy: select the text instead";
+        }
+        setTimeout(() => (copy.textContent = "Copy reply"), 2000);
+      });
+      result.append(el("div", { className: "card" },
+        el("p", { className: "reply" }, data.reply), copy));
+    }
+
+    if (data.sources.length) {
+      const list = el("div", { className: "sources" });
+      data.sources.forEach((s) => list.append(el("details", {},
+        el("summary", {}, `[${s.number}]`, el("span", { className: "cid" }, s.chunk_id)),
+        el("div", {},
+          el("p", { className: "title" }, s.title),
+          el("p", { className: "section" }, `Section: ${s.section}`)))));
+      result.append(el("h2", {}, "Sources"), list);
+    }
+
+    result.append(el("p", { className: "meta" },
+      `${data.seconds.toFixed(1)} s · $${data.cost.toFixed(5)}`));
+    result.hidden = false;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const q = question.value.trim();
+    error.hidden = true;
+    if (!q) { showError("Type a question first."); return; }
+    if (q.length > MAX) { showError(`Keep the question under ${MAX} characters.`); return; }
+
+    submit.disabled = true;
+    loading.hidden = false;
+    result.hidden = true;
+    try {
+      const res = await fetch("/api/answer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q, audience }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showError(typeof data.detail === "string" ? data.detail : `Request failed (${res.status}).`);
+        return;
+      }
+      render(data);
+    } catch {
+      showError("Couldn't reach the server. Check your connection and try again.");
+    } finally {
+      submit.disabled = false;
+      loading.hidden = true;
+    }
+  });
+
+  function showError(msg) {
+    error.textContent = msg;
+    error.hidden = false;
+  }
+</script>
+</body>
+</html>
