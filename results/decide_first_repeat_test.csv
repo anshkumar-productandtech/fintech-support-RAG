@@ -1,0 +1,233 @@
+mode,qid,run,refused,decision,needs_review,review_reasons,words,cost_usd,error,text
+off,Q43,1,True,,False,,1,0.000270,,NOT_IN_HELP_CENTER
+off,Q43,2,True,,False,,1,0.000270,,NOT_IN_HELP_CENTER
+off,Q43,3,True,,False,,1,0.000270,,NOT_IN_HELP_CENTER
+off,Q43,4,True,,False,,1,0.000270,,NOT_IN_HELP_CENTER
+off,Q43,5,True,,False,,1,0.000270,,NOT_IN_HELP_CENTER
+off,Q43,6,True,,False,,1,0.000270,,NOT_IN_HELP_CENTER
+off,Q45,1,True,,False,,1,0.000289,,NOT_IN_HELP_CENTER
+off,Q45,2,False,,True,out_of_scope_product,76,0.000515,,"Mutual fund SIP start karne ke liye, aapko merchant ki website ya app se **UPI AutoPay** choose karna hoga [2]. Kuberix app fir aapko merchant, maximum amount, aur charge karne ki frequency ka request dikhayega [2]. Aapko ise apne UPI PIN se approve karna hoga [2]. AutoPay ek merchant ko aapko schedule par automatically charge karne deta hai, jaise monthly streaming subscription ya SIP, jise aapko ek baar UPI PIN se approve karna hota hai [4]."
+off,Q45,3,False,,True,out_of_scope_product,71,0.000503,,"Mutual fund SIP start karne ke liye, aapko merchant ki website ya app se **UPI AutoPay** choose karna hoga [2]. Iske baad Kuberix par aapko merchant, maximum amount aur charging frequency ke sath ek request dikhegi [2]. Isko aapko apne UPI PIN ke sath ek baar approve karna hoga [2][4]. AutoPay se merchant aapko schedule par automatically charge kar sakta hai, jaise ki ek monthly streaming subscription ya ek SIP [4]."
+off,Q45,4,False,,True,out_of_scope_product,94,0.000605,,"Mutual fund SIP start karne ke liye aapko AutoPay (UPI mandates) ka use karna hoga [2][4]. 
+
+AutoPay ek aisa feature hai jo merchant ko schedule ke mutabiq automatically charge karne ki permission deta hai, jaise ki SIP [4]. Isko setup karne ke liye:
+- Aapko aam taur par merchant ki website ya app par jaakar **UPI AutoPay** select karna hoga [2]. 
+- Kuberix phir aapko merchant ke sath ek request dikhayega, jisme maximum amount aur charge karne ki frequency hogi [2]. 
+- Isko apne UPI PIN ke sath ek baar approve kar dein [2][4]."
+off,Q45,5,True,,False,,1,0.000288,,NOT_IN_HELP_CENTER
+off,Q45,6,False,,True,out_of_scope_product,74,0.000518,,"Aapko mutual fund SIP start karne ke liye UPI AutoPay ka use karna hoga [4]. AutoPay merchant ki website ya app se **UPI AutoPay** choose karke start hota hai [2]. Kuberix aapko merchant, maximum amount aur charging frequency ke sath ek request dikhayega [2]. Aapko ise apne UPI PIN se approve karna hoga [2][4]. AutoPay merchant ko ek schedule par automatically charge karne ki permission deta hai (jaise monthly streaming subscription ya SIP) [4]."
+off,Q47,1,True,,False,,1,0.000321,,NOT_IN_HELP_CENTER
+off,Q47,2,False,,True,out_of_scope_product,129,0.000723,,"Sources ke mutabiq, Kuberix rewards sirf un offers ke liye apply hote hain jo aap payment karne se pehle app mein dekhte hain [3]. 
+
+Common reasons kyun reward nahi milta:
+- Payment offer ke minimum amount ko meet nahi kiya [3]
+- Offer maximum number of times pehle hi use ho chuka hai [3]
+- Payment refund ya cancel ho gayi [3]
+- Payment khud ko ya apne khud ke accounts ke beech ki gayi [3]
+
+Agar aapko scratch karne ke baad cashback 48 hours ke baad nahi mila, toh **Rewards > History** se issue raise karein [3]. Cashback aapke **Kuberix Wallet** mein scratching ke **48 hours** ke andar credited hota hai aur wallet KYC limits apply hoti hain [1]. Scratch cards **30 days** mein expire hote hain [4]."
+off,Q47,3,False,,True,out_of_scope_product,131,0.000741,,"Kuberix Rewards aur cashback ke anusar, rewards sirf un offers par apply hote hain jo aapko pay karne se pehle app mein dikhte hain [3]. 
+
+Common reasons kyunki reward nahi milta:
+- Payment offer ke minimum amount ko meet nahi karti [3]
+- Offer already maximum number of times use ho chuka hai [3]
+- Payment refund ya cancel ho gayi hai [3]
+- Payment apne aap ko ya apne accounts ke beech ki gayi hai [3]
+
+Agar scratch kiya hua cashback **48 hours** ke baad nahi aaya hai, toh **Rewards > History** se issue raise karein [1][3]. Cashback aapke **Kuberix Wallet** mein credited hota hai [1]. Wallet cashback expire nahi hota, par aapke wallet KYC limits apply hote hain [1]. Scratch cards **30 days** baad expire ho jate hain [4]."
+off,Q47,4,True,,False,,1,0.000321,,NOT_IN_HELP_CENTER
+off,Q47,5,True,,False,,1,0.000322,,NOT_IN_HELP_CENTER
+off,Q47,6,True,,False,,1,0.000321,,NOT_IN_HELP_CENTER
+off,Q27,1,False,,False,,64,0.000481,,"Yes, there is a fee if you add money to your wallet with a credit card: it is 2% of the amount [1]. 
+
+For other payment methods, the fees are:
+- UPI: Free [1]
+- Debit card: Free [1]
+- Net banking: Free [1]
+
+Money added by UPI or debit card shows up instantly, while net banking can take up to 30 minutes [1]."
+off,Q27,2,False,,False,,64,0.000481,,"Yes, there is a fee if you add money to your wallet with a credit card: it is 2% of the amount [1]. 
+
+For other payment methods, the fees are:
+- UPI: Free [1]
+- Debit card: Free [1]
+- Net banking: Free [1]
+
+Money added by UPI or debit card shows up instantly, while net banking can take up to 30 minutes [1]."
+off,Q27,3,False,,False,,51,0.000418,,"Yes, adding money to your wallet with a credit card has a fee of 2% of the amount [1]. 
+
+Other methods like UPI, debit card, and net banking are free [1]. Money added via UPI or debit card shows up instantly, while net banking can take up to 30 minutes [1]."
+off,Q27,4,False,,False,,33,0.000394,,"Yes, adding money to your Kuberix Wallet using a credit card has a fee of 2% of the amount [1]. Other payment methods like UPI, debit card, and net banking are free [1]."
+off,Q27,5,False,,False,,32,0.000389,,"Yes, adding money to your Kuberix Wallet using a credit card has a fee of 2% of the amount [1]. Other methods like UPI, debit card, and net banking are free [1]."
+off,Q27,6,False,,False,,50,0.000451,,"Yes, adding money to your Kuberix Wallet using a credit card has a fee of 2% of the amount [1]. 
+
+For other payment methods:
+- UPI: Free (shows up instantly) [1]
+- Debit card: Free (shows up instantly) [1]
+- Net banking: Free (can take up to 30 minutes) [1]"
+off,Q40,1,False,,True,invalid_citations,103,0.000642,,"Netflix ka AutoPay band karne ke liye yeh steps follow karein:
+
+- **Profile > AutoPay** par jayein [1].
+- Us mandate (AutoPay) par tap karein [1].
+- Isko permanently cancel kar dein [1].
+
+Cancelling se future charges ruk jate hain, lekin yeh past payments ko refund nahi karta, iske liye merchant se contact karein [1]. Agar cancel karne ke baad bhi charge lagta hai, toh payment ke sath **History** se ek issue raise karein [4]. Agar valid cancellation ke baad paise kate hain, toh aapke bank ko ise reverse karna hoga [4]. (Note: Kripya apna UPI PIN ya OTP share na karein [6].)"
+off,Q40,2,False,,False,,92,0.000599,,"Netflix ka AutoPay band karne ke liye yeh steps follow karein:
+
+1. **Profile > AutoPay** par jayein [1].
+2. Uss mandate par tap karein [1].
+3. Isey permanently **Cancel** kar dein [1].
+
+Cancelling se future charges ruk jaate hain, lekin yeh past payments ko refund nahi karta; refunds ke liye merchant se contact karein [1]. Agar cancel karne ke baad bhi charge lag jaye, toh payment ke saath **History** se ek issue raise karein [4]. Agar valid cancellation ke baad paise kate hain, toh aapke bank ko ise reverse karna hoga [4]."
+off,Q40,3,False,,False,,84,0.000564,,"Netflix ka AutoPay band karne ke liye yeh steps follow karein:
+
+1. **Profile > AutoPay** par jayein [1].
+2. Us mandate par tap karein [1].
+3. Isey permanently **cancel** kar dein [1].
+
+Cancel karne se future charges ruk jate hain, lekin yeh past payments ko refund nahi karta; refunds ke liye merchant se contact karein [1]. Agar valid cancellation ke baad bhi paise kate hain, toh payment ke sath **History** se ek issue raise karein, aur aapke bank ko ise reverse karna hoga [3]."
+off,Q40,4,False,,False,,78,0.000542,,"Netflix ka AutoPay band karne ke liye, **Profile > AutoPay** par jayein [1]. Wahan apna mandate tap karein aur ise permanently **cancel** kar dein [1]. 
+
+Cancellation se future charges ruk jaate hain, lekin yeh past payments ko refund nahi karta; refunds ke liye merchant se contact karein [1]. 
+
+Agar valid cancellation ke baad bhi paise kate hain, toh payment ke sath **History** se ek issue raise karein [3]. Aise mein aapke bank ko paise reverse karne honge [3]."
+off,Q40,5,False,,False,,84,0.000557,,"Netflix ka AutoPay band karne ke liye, **Profile > AutoPay** par jayein [1]. Wahan apna mandate tap karein aur ise permanently **cancel** kar dein [1].
+
+Isse future charges ruk jayenge [1]. Yeh past payments ko refund nahi karta hai; refund ke liye merchant se contact karein [1]. Agar cancel karne ke baad bhi paise kate hain, toh payment ke saath **History** se ek issue raise karein [4]. Agar valid cancellation ke baad paise kate hain, toh aapke bank ko ise reverse karna hoga [4]."
+off,Q40,6,False,,False,,93,0.000609,,"Netflix ka AutoPay band karne ke liye yeh steps follow karein:
+
+1. **Profile > AutoPay** par jayein [1].
+2. Us mandate (Netflix) par tap karein [1].
+3. Ise permanently **Cancel** kar dein [1].
+
+Cancel karne se aage ke charges ruk jayenge, lekin yeh past payments ko refund nahi karta—uske liye merchant (Netflix) se contact karein [1]. Agar cancel karne ke baad bhi paise kate hain, toh payment ke sath **History** se ek issue raise karein, aur agar valid cancellation ke baad paise kate hain toh aapke bank ko ise reverse karna hoga [4]."
+off,Q02,1,False,,False,,110,0.000700,,"Aapke 3 days back ke payment ke liye, aap **History** mein jayein, payment par tap karein, aur **Raise an issue > Money debited, payment failed** par tap karein [1]. Apne paas **UPI reference number** handy rakhein kyunki bank ko iski zaroorat hogi [1]. Aap apne bank se direct contact karke reversal aur delay compensation ke liye bhi pooch sakte hain [1]. Agar aapka issue 30 days ke andar solve nahi hota hai, toh ""Complaints and escalation"" dekhein [1]. Kabhi-kabhi paisa apne aap wapas aa jata hai aur aapko kuch karne ki zaroorat nahi hoti [4], ya phir pending hone par paisa automatically bank account mein wapas aa jata hai [3]."
+off,Q02,2,False,,False,,103,0.000708,,"Agar paisa debit ho gaya aur payment fail ho gayi, toh paisa automatically bank account mein waapas aa jata hai [1][3][4]. Aapko kuch karne ki zaroorat nahi hai [4]. 
+
+Aapko kya karna chahiye:
+1. **History** mein jayein, payment par tap karein, phir **Raise an issue > Money debited, payment failed** par tap karein [1].
+2. **UPI reference number** apne paas rakhein kyunki bank ko iski zaroorat padegi [1].
+3. Aap apne bank se directly contact karke reversal aur **delay compensation** ke liye bhi pooch sakte hain [1].
+
+Agar aapki problem 30 din ke andar solve na ho, toh ""Complaints and escalation"" dekhein [1]."
+off,Q02,3,False,,False,,103,0.000667,,"Aapko **History** me jaakar payment tap karna hai, phir **Raise an issue > Money debited, payment failed** par tap karna hai [1]. Apne bank se delay compensation aur reversal ke liye keh sakte hain [1]. Aapka UPI reference number handy rakhiye, bank ko iski zaroorat padegi [1]. Agar issue 30 days ke andar solve na ho, toh ""Complaints and escalation"" dekhein [1]. Kabhi kabhi paisa apne aap wapas aa jata hai, aapko kuch karne ki zaroorat nahi hoti [3]. Receiver ko boliye ki wo apna bank statement check karein aur 12 digits ka UPI reference number use karke bank se trace karein [2]."
+off,Q02,4,False,,False,,120,0.000779,,"Aapke sawal ke liye sources me koi compensation ya time limit mention nahi hai [1][2][3][4][5]. Kuberix UPI se paisa bhejne par koi fee nahi leta hai [5]. 
+
+Sender ke liye steps:
+1. Sender se **UPI reference number** maangein aur check karein ki payment unke liye **Successful** dikh raha hai ya nahi [4].
+2. Apne Kuberix app ke alawa apna bank statement check karein, kyunki paisa aapke primary bank account me jata hai [4].
+3. Check karein ki **Profile > Bank accounts** me kaunsa account primary hai [4].
+
+Agar sender ka payment successful hai aur 24 hours ke baad bhi aapke bank account me paisa nahi aaya hai, toh UPI reference number ke sath apne bank se contact karein [4].
+
+NOT_IN_HELP_CENTER"
+off,Q02,5,False,,False,,115,0.000743,,"Agar aapka paisa debit ho gaya aur payment fail ho gaya, toh paisa aapke bank account mein automatically waapas aa jata hai [2][4]. 
+
+Aapko yeh steps follow karne honge:
+1. **History** mein jayein, payment par tap karein, aur **Raise an issue > Money debited, payment failed** par tap karein [1].
+2. Apna **UPI reference number** handy rakhein kyunki aapke bank ko iski zaroorat padegi [1].
+3. Aap apne bank se directly bhi contact kar sakte hain aur reversal aur **delay compensation** ke liye bol sakte hain [1].
+
+Agar aapka issue 30 din ke andar solve nahi hota hai, toh ""Complaints and escalation"" dekhein [1]. Never share your UPI PIN, OTP, password, or full card number."
+off,Q02,6,False,,False,,101,0.000698,,"Agar aapka paisa debit ho gaya aur payment fail ho gaya, toh paisa automatically aapke bank account mein wapas aa jata hai [2][4]. 
+
+Aapko yeh karna hoga:
+1. **History** mein jayein, payment par tap karein, phir **Raise an issue > Money debited, payment failed** par tap karein [1].
+2. Apne paas **UPI reference number** rakhein kyunki bank ko iski zaroorat padegi [1].
+3. Aap apne bank se bhi seedhe contact kar sakte hain aur reversal aur **delay compensation** ke liye bol sakte hain [1].
+
+Agar yeh issue 30 dino ke andar solve nahi hota hai, toh ""Complaints and escalation"" dekhein [1]."
+on,Q43,1,True,NOT_IN_HELP_CENTER,False,,1,0.000220,,NOT_IN_HELP_CENTER
+on,Q43,2,True,NOT_IN_HELP_CENTER,False,,1,0.000220,,NOT_IN_HELP_CENTER
+on,Q43,3,True,NOT_IN_HELP_CENTER,False,,1,0.000220,,NOT_IN_HELP_CENTER
+on,Q43,4,True,NOT_IN_HELP_CENTER,False,,1,0.000220,,NOT_IN_HELP_CENTER
+on,Q43,5,True,NOT_IN_HELP_CENTER,False,,1,0.000220,,NOT_IN_HELP_CENTER
+on,Q43,6,True,NOT_IN_HELP_CENTER,False,,1,0.000220,,NOT_IN_HELP_CENTER
+on,Q45,1,True,NOT_IN_HELP_CENTER,False,,1,0.000221,,NOT_IN_HELP_CENTER
+on,Q45,2,True,NOT_IN_HELP_CENTER,False,,1,0.000237,,NOT_IN_HELP_CENTER
+on,Q45,3,True,NOT_IN_HELP_CENTER,False,,1,0.000237,,NOT_IN_HELP_CENTER
+on,Q45,4,True,NOT_IN_HELP_CENTER,False,,1,0.000221,,NOT_IN_HELP_CENTER
+on,Q45,5,True,NOT_IN_HELP_CENTER,False,,1,0.000237,,NOT_IN_HELP_CENTER
+on,Q45,6,True,NOT_IN_HELP_CENTER,False,,1,0.000221,,NOT_IN_HELP_CENTER
+on,Q47,1,True,NOT_IN_HELP_CENTER,False,,1,0.000269,,NOT_IN_HELP_CENTER
+on,Q47,2,True,NOT_IN_HELP_CENTER,False,,1,0.000248,,NOT_IN_HELP_CENTER
+on,Q47,3,True,NOT_IN_HELP_CENTER,False,,1,0.000270,,NOT_IN_HELP_CENTER
+on,Q47,4,True,NOT_IN_HELP_CENTER,False,,1,0.000248,,NOT_IN_HELP_CENTER
+on,Q47,5,True,NOT_IN_HELP_CENTER,False,,1,0.000236,,NOT_IN_HELP_CENTER
+on,Q47,6,True,NOT_IN_HELP_CENTER,False,,1,0.000270,,NOT_IN_HELP_CENTER
+on,Q27,1,False,ANSWER,False,,81,0.000664,,"Yes, adding money to your Kuberix Wallet with a credit card has a fee of 2% of the amount [1]. Adding money via UPI, debit card, or net banking is free [1]. UPI and debit card additions show up instantly, while net banking can take up to 30 minutes [1]. If your bank was debited but the wallet wasn't credited, the money comes back to your bank within T + 1 day, or you can raise an issue from **History** [5]."
+on,Q27,2,False,ANSWER,False,,50,0.000552,,"Yes, adding money to your Kuberix Wallet using a credit card has a fee of 2% of the amount [1]. Other methods like UPI, debit card, and net banking are free [1]. UPI and debit card additions show up instantly, while net banking can take up to 30 minutes [1]."
+on,Q27,3,False,ANSWER,False,,51,0.000557,,"Yes, adding money to your Kuberix Wallet using a credit card has a fee of 2% of the amount [1]. Meanwhile, adding money via UPI, debit card, or net banking is free [1]. UPI and debit card deposits show up instantly, while net banking can take up to 30 minutes [1]."
+on,Q27,4,False,ANSWER,False,,53,0.000602,,"Yes, adding money to your Kuberix wallet with a credit card has a fee of 2% of the amount [1]. 
+
+For other payment methods:
+- UPI: Free [1] (shows up instantly [1])
+- Debit card: Free [1] (shows up instantly [1])
+- Net banking: Free [1] (can take up to 30 minutes [1])"
+on,Q27,5,False,ANSWER,False,,54,0.000559,,"Yes, adding money to the Kuberix Wallet using a credit card has a fee of 2% of the amount [1]. Adding money via UPI or debit card is free, and net banking is also free [1]. UPI and debit card deposits show up instantly, while net banking can take up to 30 minutes [1]."
+on,Q27,6,False,ANSWER,False,,51,0.000557,,"Yes, adding money to your Kuberix Wallet using a credit card has a fee of 2% of the amount [1]. Meanwhile, adding money via UPI, debit card, or net banking is free [1]. UPI and debit card deposits show up instantly, while net banking can take up to 30 minutes [1]."
+on,Q40,1,False,ANSWER,False,,105,0.000795,,"Netflix ka AutoPay band karne ke liye yeh steps follow karein:
+
+1. **Profile > AutoPay** par jayein [1].
+2. Us mandate par tap karein [1].
+3. Use permanent cancel karne ke liye **Cancel** select karein (jis se future charges ruk jayenge) [1]. (Aap pause bhi kar sakte hain) [1].
+
+Yeh dhyan rakhein ki cancelling se past payments refund nahi hoti; uske liye merchant se contact karna padega [1]. Agar cancel karne ke baad bhi paise kate hain, toh payment ke sath **History** se ek issue raise karein, aur agar valid cancellation ke baad paise kate hain toh aapke bank ko ise reverse karna hoga [4]."
+on,Q40,2,False,ANSWER,False,,90,0.000726,,"Netflix ka AutoPay band karne ke liye yeh steps follow karein:
+
+1. **Profile > AutoPay** par jayein [1].
+2. Us mandate par tap karein aur isko permanently **Cancel** kar dein [1].
+
+Cancel karne se future charges ruk jate hain, lekin yeh past payments ko refund nahi karta; iske liye merchant se contact karein [1]. Cancel karne se pehle agar paise kate hain, toh **History** mein jaakar payment ke sath issue raise karein, aur agar valid cancellation ke baad paise kate hain toh aapke bank ko ise reverse karna hoga [3]."
+on,Q40,3,False,ANSWER,False,,94,0.000781,,"Netflix ka AutoPay band karne ke liye:
+
+1. **Profile > AutoPay** par jayein [1].
+2. Apne mandate par tap karein [1].
+3. Ise permanently **Cancel** kar dein [1].
+
+**Kuch zaroori baatein:**
+- Cancelling se aane wale charges ruk jaate hain [1].
+- Yeh purane payments ko refund nahi karta; refunds ke liye merchant se contact karein [1].
+- Agar cancel karne ke baad bhi paise katein, toh payment ke saath **History** se ek issue raise karein [4]. Agar valid cancellation ke baad paise kate hain, toh aapke bank ko ise reverse karna hoga [4]."
+on,Q40,4,False,ANSWER,False,,86,0.000705,,"Netflix ka AutoPay band karne ke liye, **Profile > AutoPay** par jayein [1]. Wahan par apna mandate tap karein aur ise permanently **Cancel** kar dein [1]. 
+
+Ye future charges ko rok deta hai, lekin past payments ko refund nahi karta [1]. Refund ke liye merchant se contact karein [1]. Agar cancel karne ke baad bhi paise kate hain, toh payment ke sath **History** se ek issue raise karein [4]; agar valid cancellation ke baad paise kate hain toh aapke bank ko ise reverse karna hoga [4]."
+on,Q40,5,False,ANSWER,False,,88,0.000723,,"Netflix ka AutoPay band karne ke liye, **Profile > AutoPay** par jayein [1]. Wahan apna mandate tap karein aur ise permanently **Cancel** kar dein [1].
+
+Mandate cancel karne se future charges ruk jate hain [1]. Yeh past payments ko refund nahi karta hai; refund ke liye merchant se contact karein [1]. 
+
+Agar cancel karne ke baad bhi paisa kata hai, toh payment ke sath **History** se ek issue raise karein [4]. Agar valid cancellation ke baad paise kate hain, toh aapke bank ko ise reverse karna hoga [4]."
+on,Q40,6,False,ANSWER,False,,92,0.000738,,"Netflix ka AutoPay (UPI mandate) band karne ke liye yeh steps follow karein:
+
+1. **Profile > AutoPay** par jayein [1].
+2. Us mandate par tap karein aur ise permanently **Cancel** kar dein [1].
+
+Cancel karne se future charges ruk jate hain, lekin yeh past payments ko refund nahi karta—uske liye merchant (Netflix) se contact karein [1]. Cancelling ke baad bhi agar paise kate hain, toh payment ke sath **History** se ek issue raise karein, aur agar valid cancellation ke baad paise kate hain toh aapke bank ko ise reverse karna hoga [3]."
+on,Q02,1,False,ANSWER,False,,140,0.001043,,"Haan, compensation milega! RBI ke rules ke mutabik agar aapne kisi person ko UPI transfer kiya hai, toh money back karne ki timeline T + 1 day hai (T transaction ka din hai) [2]. Agar iske baad delay hota hai, toh aapka bank aapko har ek din ke delay ke liye ₹100 dega [2].
+
+Aapko kya karna hai:
+1. **History** mein jayein, payment par tap karein, phir **Raise an issue > Money debited, payment failed** par tap karein [1].
+2. Apne paas **UPI reference number** rakhein, kyunki bank ko iski zaroorat hogi [1].
+3. Aap apne bank se direct contact karke reversal aur delay compensation bhi maang sakte hain [1].
+Agar aapka issue 30 days ke andar solve na ho, toh ""Complaints and escalation"" dekhein [1]. Kabhi bhi apna UPI PIN, OTP, password ya full card number share na karein."
+on,Q02,2,False,ANSWER,False,,99,0.000829,,"Aapko compensation ke liye apne bank se directly contact karna hoga aur delay compensation ke liye bolna hoga [1]. Agar aapka issue 30 din ke andar solve nahi hota, toh ""Complaints and escalation"" dekhein [1]. Kabhi-kabhi paisa account se nikal jata hai par payment fail ho jati hai, toh paisa automatically wapas aa jata hai [4]. Aapko kuch karne ki zarurat nahi hai [4]. Aap **History** me jaakar payment tap karein aur **Raise an issue > Money debited, payment failed** par tap karein [1]. Apna **UPI reference number** hamesha paas rakhein kyunki bank ko iski zarurat padti hai [1]."
+on,Q02,3,False,ANSWER,False,,87,0.000792,,"Aapke payment fail hone par paise automatic wapas aa jaate hain [3][4]. Agar paise nahi aaye hain, toh **History** mein jayein, payment par tap karein, aur **Raise an issue > Money debited, payment failed** par tap karein [1]. Apne paas **UPI reference number** zaroor rakhein, kyunki bank ko iski zaroorat padegi [1]. Aap apne bank se direct contact karke reversal aur delay compensation ke liye bhi pooch sakte hain [1]. Agar aapka issue 30 din ke andar solve nahi hota hai, toh ""Complaints and escalation"" dekhein [1]."
+on,Q02,4,False,ANSWER,False,,119,0.000944,,"Aapko pareshani ke liye khed hai. Kabhi-kabhi paise account se nikal jate hain aur payment fail ho jata hai, yeh paise automatically wapas aa jate hain aur aapko kuch karne ki zarurat nahi hai [2][4]. 
+
+Agar aapka issue 30 din ke andar solve nahi hota hai, toh ""Complaints and escalation"" dekhein [1]. 
+
+Aap bank se delay compensation bhi maang sakte hain [1]. 
+
+Kadam uthane ke liye:
+1. **History** mein jayein, payment par tap karein, phir **Raise an issue > Money debited, payment failed** par tap karein [1].
+2. Apne paas **UPI reference number** rakhein kyunki bank ko iski zarurat padegi [1].
+3. Aap apne bank se seedha sampark karke reversal aur delay compensation ke liye keh sakte hain [1]."
+on,Q02,5,False,ANSWER,False,,72,0.000727,,"Aapko compensation ke liye apne bank se direct contact karna hoga aur delay compensation ke liye puchna hoga [1]. Agar aapka issue 30 days ke andar solve nahi hota hai, toh ""Complaints and escalation"" section dekhein [1]. Aap History mein jaakar payment par tap karein aur **Raise an issue > Money debited, payment failed** par click karein [1]. Apne paas **UPI reference number** zaroor rakhein, kyunki bank ko iski zaroorat padegi [1]."
+on,Q02,6,False,ANSWER,False,,168,0.001155,,"Bhai, agar aapne ek person ko UPI transfer bheja tha aur paisa debit ho gaya lekin payment fail ho gaya, toh RBI ke rules ke hisaab se money back milne ka time limit hai: T + 1 day (""T"" transaction ka din hai) [3]. Most reversals kuch ghante mein ho jaate hain [3]. 
+
+Agar ye time limit cross ho gayi hai aur aapko delay mila hai, toh aapka bank aapko delay ke har ek din ke liye ₹100 compensation dega [3]. 
+
+Aapko kya karna hai:
+1. **History** mein jayein, payment par tap karein, phir **Raise an issue > Money debited, payment failed** par tap karein [1].
+2. Apna **UPI reference number** hamesha taiyar rakhein, kyunki bank ko iski zaroorat padegi [1]. Aap seedhe apne bank se bhi contact karke reversal aur delay compensation maang sakte hain [1]. 
+Agar aapka issue 30 din ke andar solve nahi hota hai, toh ""Complaints and escalation"" dekhein [1]. Kabhi bhi apna UPI PIN, OTP, password ya full card number share na karein."
