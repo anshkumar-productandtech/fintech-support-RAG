@@ -91,30 +91,91 @@ ENGLISH_SHARING_PATTERN = re.compile(
 HINGLISH_SHARING_PATTERN = re.compile(
     r"\b(?:bata|batao|bataun|de\s+do|du|dena|maang|mang|bhej)\b"
 )
+# Fraud victim: someone who has ALREADY shared a credential or lost money gets a fixed
+# "act now" reply, also with no Gemini calls. Checked before the credential question.
+# "paisa kat gaya" alone is a failed payment, so it isn't a loss phrase.
+FRAUD_CREDENTIAL_PATTERN = re.compile(r"\b(?:otp|pin|password|cvv|card\s+number)\b")
+ENGLISH_SHARED_PATTERN = re.compile(r"\b(?:shared|gave|given|told|entered|typed)\b")
+HINGLISH_SHARED_PATTERN = re.compile(
+    r"\b(?:de\s+diya|bata\s+diya|share\s+kar\s+diya|daal\s+diya)\b"
+)
+ENGLISH_LOSS_PATTERN = re.compile(
+    r"\b(?:money\s+is\s+gone|money\s+gone|unauthori[sz]ed\s+payment"
+    r"|didn['’]?t\s+make\s+this\s+payment|got\s+scammed|i\s+was\s+scammed)\b"
+)
+HINGLISH_LOSS_PATTERN = re.compile(
+    r"\b(?:paisa\s+chala\s+gaya|paise\s+chale\s+gaye|maine\s+nahi\s+kiya|fraud\s+ho\s+gaya)\b"
+)
+# The merchant fraud reply's last sentence, kept only if a merchant article has it.
+MERCHANT_REPORT_PATH = "Help > Chat with us"
+MERCHANT_REPORT_SENTENCE = f" Report it right away from {MERCHANT_REPORT_PATH}."
 # Each source is the chunk of that article whose text contains the marker.
+# Keyed by (kind, audience); kind is "credential" or "fraud".
 SAFETY_SOURCES = {
-    "customer": [("KB-C17", "## Common scams"), ("KB-C17", "## Do these right now")],
-    "merchant": [("KB-M13", "Kuberix will never ask for your OTP or password by phone")],
+    ("credential", "customer"): [("KB-C17", "## Common scams"), ("KB-C17", "## Do these right now")],
+    ("credential", "merchant"): [
+        ("KB-M13", "Kuberix will never ask for your OTP or password by phone")
+    ],
+    ("fraud", "customer"): [
+        ("KB-C17", "The sooner you report"),
+        ("KB-C17", "## Do these right now"),
+        ("KB-C17", "## Report within 3 days"),
+    ],
+    ("fraud", "merchant"): [
+        ("KB-M13", "Kuberix will never ask for your OTP or password by phone")
+    ],
 }
+# Keyed by (kind, audience, language).
 SAFETY_REPLIES = {
-    ("customer", "english"): (
+    ("fraud", "customer", "english"): (
+        "Act now: the sooner you report, the better the chance of stopping the money [1].\n"
+        "1. Block your Kuberix account: go to Help > Block my account, or use "
+        "kuberix.example/block from any browser [2].\n"
+        "2. Call your bank and ask them to block UPI on your account [2].\n"
+        "3. Report it to the National Cybercrime Helpline: call 1930 or file a complaint "
+        "at cybercrime.gov.in [2].\n"
+        "4. Report it to Kuberix: go to History, tap the payment, then Report fraud [2].\n"
+        "For UPI payments from your bank account, your bank decides refunds under its own "
+        "policy, so report to your bank as soon as possible [3]."
+    ),
+    ("fraud", "customer", "hinglish"): (
+        "Turant action lijiye: jitni jaldi aap report karenge, paisa rokne ka chance utna "
+        "zyada hoga [1].\n"
+        "1. Apna Kuberix account block karein: Help > Block my account par jaayein, ya kisi "
+        "bhi browser se kuberix.example/block use karein [2].\n"
+        "2. Apne bank ko call karke apne account par UPI block karwayein [2].\n"
+        "3. National Cybercrime Helpline par report karein: 1930 par call karein ya "
+        "cybercrime.gov.in par complaint file karein [2].\n"
+        "4. Kuberix ko report karein: History mein jaayein, payment par tap karein, phir "
+        "Report fraud chunein [2].\n"
+        "Bank account se hue UPI payments ke refund aapka bank apni policy ke hisaab se "
+        "decide karta hai, isliye jitni jaldi ho sake apne bank ko report karein [3]."
+    ),
+    ("fraud", "merchant", "english"): (
+        "Don't share your OTP or password with anyone; Kuberix will never ask for it by "
+        "phone [1]."
+    ),
+    ("credential", "customer", "english"): (
         "Don't share it. Kuberix will never ask for your PIN, OTP or password, and a "
         "caller who says they're from Kuberix and asks for an OTP is a common scam [1]. "
         "If you've already shared it, act now: block your Kuberix account from Help > "
         "Block my account, call your bank to block UPI, and report it to the National "
         "Cybercrime Helpline on 1930 [2]."
     ),
-    ("customer", "hinglish"): (
+    ("credential", "customer", "hinglish"): (
         "OTP share mat kijiye. Kuberix kabhi aapka PIN, OTP ya password nahi maangta, "
         "aur Kuberix ke naam se call karke OTP maangna ek common scam hai [1]. Agar "
         "aapne share kar diya hai, toh turant Help > Block my account se apna Kuberix "
         "account block karein, bank ko call karke UPI block karwayein, aur 1930 "
         "(National Cybercrime Helpline) par report karein [2]."
     ),
-    ("merchant", "english"): (
+    ("credential", "merchant", "english"): (
         "Don't share it. Kuberix will never ask for your OTP or password by phone [1]."
     ),
 }
+MERCHANT_REPORT_SQL = """
+    SELECT 1 FROM chunks WHERE audience = 'merchant' AND strpos(text, %(path)s) > 0 LIMIT 1
+"""
 SAFETY_SQL = """
     SELECT chunk_id, doc_id, title, text
     FROM chunks
@@ -388,11 +449,39 @@ def safety_language(question, audience):
     return "english"
 
 
-def safety_sources(audience):
-    """The safety answer's sources, found by their text, in citation order."""
+def _fraud_triggers(question):
+    """(english, hinglish): whether an English or a Hinglish phrase marks a fraud victim.
+
+    A phrase is a past-tense sharing word with a credential word, or a money-loss phrase.
+    """
+    q = question.lower()
+    credential = bool(FRAUD_CREDENTIAL_PATTERN.search(q))
+    english = bool(ENGLISH_LOSS_PATTERN.search(q)) or (
+        credential and bool(ENGLISH_SHARED_PATTERN.search(q))
+    )
+    hinglish = bool(HINGLISH_LOSS_PATTERN.search(q)) or (
+        credential and bool(HINGLISH_SHARED_PATTERN.search(q))
+    )
+    return english, hinglish
+
+
+def is_fraud_victim(question):
+    """True if the question says a credential was already shared or money was lost."""
+    return any(_fraud_triggers(question))
+
+
+def fraud_language(question, audience):
+    """hinglish for a customer question a Hinglish phrase triggered, else english."""
+    if audience == "customer" and _fraud_triggers(question)[1]:
+        return "hinglish"
+    return "english"
+
+
+def safety_sources(kind, audience):
+    """A fixed answer's sources, found by their text, in citation order."""
     sources = []
     with _connect() as conn:
-        for doc_id, marker in SAFETY_SOURCES[audience]:
+        for doc_id, marker in SAFETY_SOURCES[(kind, audience)]:
             rows = conn.execute(SAFETY_SQL, {"doc_id": doc_id, "marker": marker}).fetchall()
             if not rows:
                 raise RuntimeError(f"No {doc_id} chunk contains {marker!r}")
@@ -401,11 +490,25 @@ def safety_sources(audience):
     return sources
 
 
-def safety_answer(question, audience, start):
-    """The fixed reply for a credential question, in answer()'s result shape. No Gemini."""
-    language = safety_language(question, audience)
-    sources = safety_sources(audience)
-    text = SAFETY_REPLIES[(audience, language)]
+def safety_reply(kind, audience, language):
+    """The fixed reply text. The merchant fraud reply ends with where to report it, but
+    only while a merchant article mentions that path."""
+    text = SAFETY_REPLIES[(kind, audience, language)]
+    if (kind, audience) == ("fraud", "merchant"):
+        with _connect() as conn:
+            if conn.execute(MERCHANT_REPORT_SQL, {"path": MERCHANT_REPORT_PATH}).fetchone():
+                text += MERCHANT_REPORT_SENTENCE
+    return text
+
+
+def safety_answer(question, audience, start, kind="credential"):
+    """A fixed reply (kind "credential" or "fraud"), in answer()'s result shape. No Gemini."""
+    if kind == "fraud":
+        language = fraud_language(question, audience)
+    else:
+        language = safety_language(question, audience)
+    sources = safety_sources(kind, audience)
+    text = safety_reply(kind, audience, language)
     return {
         "text": text,
         "mode": run_mode(),
@@ -504,6 +607,8 @@ def answer(question, audience):
     start = time.perf_counter()
     if audience not in AUDIENCES:
         raise ValueError(f"audience must be one of {AUDIENCES}, got {audience!r}")
+    if is_fraud_victim(question):
+        return safety_answer(question, audience, start, kind="fraud")
     if is_credential_question(question):
         return safety_answer(question, audience, start)
     input_tokens = output_tokens = 0

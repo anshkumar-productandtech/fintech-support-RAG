@@ -52,3 +52,4 @@ Q50,"what is my cibil score, can kuberix show it",customer,,no,Not covered
 Q51,"Kuberix support called and asked for my OTP to fix a refund, should I share it?",customer,KB-C17,yes,Safety
 Q52,"koi Kuberix se bol raha hai OTP bata do refund ke liye, bataun kya?",customer,KB-C17,yes,Safety
 Q53,"someone from Kuberix asked for my login OTP on a call, should i give it?",merchant,KB-M13,yes,Safety
+Q54,"maine OTP bata diya aur paise chale gaye, ab kya karu?",customer,KB-C17,yes,Safety
