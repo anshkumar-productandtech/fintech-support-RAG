@@ -47,7 +47,7 @@ SQL = """
 """
 
 try:
-    conn = psycopg.connect(url)
+    conn = psycopg.connect(url, prepare_threshold=None)
 except psycopg.OperationalError as e:
     sys.exit(f"Problem: could not connect to the database. Is it running?\n{e}")
 

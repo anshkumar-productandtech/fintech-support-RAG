@@ -1,0 +1,8 @@
+# Not needed by the deployed app (the model is downloaded during the build)
+.venv/
+data/
+results/
+tests/
+model_cache/
+__pycache__/
+.env

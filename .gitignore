@@ -11,3 +11,5 @@ __pycache__/
 
 # Embedding model downloaded by scripts/download_model.py
 model_cache/
+.vercel
+.env*

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": [
+    "hnd1"
+  ],
+  "functions": {
+    "src/app.py": {
+      "maxDuration": 60,
+      "includeFiles": "{model_cache/**,static/**}",
+      "excludeFiles": "{.env,.env.*,.venv/**,data/**,results/**,help-center/**,tests/**,**/__pycache__/**}"
+    }
+  }
+}

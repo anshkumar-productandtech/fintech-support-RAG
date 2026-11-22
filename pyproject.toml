@@ -1,0 +1,27 @@
+# Vercel reads this file: the app's runtime dependencies (the same pins as
+# requirements-app.txt; keep the two in step) and the build step that puts the
+# embedding model into the deployed bundle. The evaluation scripts and tests use
+# requirements.txt instead.
+[project]
+name = "kuberix-support-copilot"
+version = "0.1.0"
+requires-python = "==3.12.*"
+dependencies = [
+    "fastapi==0.162.2",
+    "uvicorn==0.54.0",
+    "starlette==1.10.0",
+    "annotated-doc==0.0.7",
+    "opentelemetry-api==1.45.2",
+    "fastembed==0.9.1",
+    "psycopg[binary]==3.3.9",
+    "pgvector==0.5.1",
+    "python-dotenv==1.2.3",
+    "google-genai==3.4.0",
+]
+
+[tool.vercel]
+entrypoint = "src.app:app"
+
+[tool.vercel.scripts]
+# Needs MODEL_CACHE_DIR=model_cache in the project's environment variables.
+build = "python scripts/download_model.py"

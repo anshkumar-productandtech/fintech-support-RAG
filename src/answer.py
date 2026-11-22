@@ -136,7 +136,9 @@ def _connect():
     url = os.environ.get("DATABASE_URL")
     if not url:
         raise RuntimeError("DATABASE_URL is not set. Add it to the .env file.")
-    conn = psycopg.connect(url)
+    # prepare_threshold=None: no server-side prepared statements, which Supabase's
+    # Transaction pooler (port 6543) doesn't support.
+    conn = psycopg.connect(url, prepare_threshold=None)
     register_vector(conn)
     return conn
 
@@ -145,9 +147,13 @@ def _connect():
 def _embed_model():
     from fastembed import TextEmbedding
 
-    # MODEL_CACHE_DIR: where scripts/download_model.py saved the model. Unset means
-    # fastembed's default cache folder.
-    return TextEmbedding(EMBED_MODEL, cache_dir=os.getenv("MODEL_CACHE_DIR"))
+    # MODEL_CACHE_DIR: the folder scripts/download_model.py copied the model files into.
+    # When it's set, the model is only read from there, never downloaded. Unset means
+    # fastembed's default cache folder, downloading the model if it isn't there.
+    model_dir = os.getenv("MODEL_CACHE_DIR")
+    if model_dir:
+        return TextEmbedding(EMBED_MODEL, specific_model_path=model_dir, local_files_only=True)
+    return TextEmbedding(EMBED_MODEL)
 
 
 @lru_cache(maxsize=1)

@@ -71,7 +71,7 @@ def main():
     if not url:
         sys.exit("Problem: DATABASE_URL is not set. Add it to the .env file.")
     try:
-        conn = psycopg.connect(url)
+        conn = psycopg.connect(url, prepare_threshold=None)
     except psycopg.OperationalError as e:
         sys.exit(f"Problem: could not connect to the database. Is it running?\n{e}")
     register_vector(conn)

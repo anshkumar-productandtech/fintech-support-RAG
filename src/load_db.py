@@ -29,7 +29,7 @@ if len(chunks) != len(vectors):
     sys.exit(f"Problem: {len(chunks)} chunks but {len(vectors)} vectors. Re-run: python src/embed_chunks.py section")
 
 try:
-    conn = psycopg.connect(url)
+    conn = psycopg.connect(url, prepare_threshold=None)
 except psycopg.OperationalError as e:
     sys.exit(f"Problem: could not connect to the database. Is it running?\n{e}")
 

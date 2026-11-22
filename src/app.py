@@ -3,13 +3,12 @@
 #
 # The app only calls answer() and reshapes its result for the page.
 # It never logs the question text, IP addresses or any API key.
+import hashlib
 import logging
 import os
+import random
 import sys
-import threading
 import time
-from collections import deque
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal
 
@@ -24,12 +23,33 @@ MAX_QUESTION_CHARS = 500
 INDEX_HTML = Path(__file__).resolve().parent.parent / "static" / "index.html"
 NO_HEADING = "Introduction"  # a chunk from the text before an article's first "## "
 
-# Limits, checked before any Gemini call. Both are in memory, so they reset on restart.
+# Limits, checked before any Gemini call. They're kept in Postgres (tables made by
+# scripts/create_usage_tables.py), because Vercel runs many short-lived copies of the app.
 VISITOR_LIMIT = 8  # questions per visitor (IP address)...
-VISITOR_WINDOW = 10 * 60  # ...per 10 minutes
+VISITOR_WINDOW = 10 * 60  # ...per 10-minute window, in seconds
 DAILY_ANSWER_CAP = int(os.getenv("DAILY_ANSWER_CAP", "100"))  # everyone, per UTC day
 VISITOR_LIMIT_REASON = "visitor_limit"
 DAILY_CAP_REASON = "daily_cap"
+CLEANUP_CHANCE = 0.05  # share of questions that also delete visitor rows over a day old
+
+# Each statement adds one, unless the row is already at its limit: then the WHERE
+# fails, nothing changes and no row comes back. Atomic, so copies running at the same
+# time can't both take the last place.
+VISITOR_SQL = """
+    INSERT INTO usage_visitor AS v (ip_hash, window_start, count)
+    VALUES (%(ip_hash)s, date_bin(make_interval(secs => %(window)s), now(), 'epoch'), 1)
+    ON CONFLICT (ip_hash, window_start)
+        DO UPDATE SET count = v.count + 1 WHERE v.count < %(limit)s
+    RETURNING count
+"""
+DAILY_SQL = """
+    INSERT INTO usage_daily AS d (day, answers)
+    VALUES ((now() AT TIME ZONE 'UTC')::date, 1)
+    ON CONFLICT (day)
+        DO UPDATE SET answers = d.answers + 1 WHERE d.answers < %(cap)s
+    RETURNING answers
+"""
+CLEANUP_SQL = "DELETE FROM usage_visitor WHERE window_start < now() - interval '1 day'"
 
 log = logging.getLogger("copilot")
 # uvicorn's access log prints each visitor's IP address, so it's switched off.
@@ -38,58 +58,59 @@ app = FastAPI(
     title="Kuberix Support Copilot", docs_url=None, redoc_url=None, openapi_url=None
 )
 
-_limits_lock = threading.Lock()
-_visitor_times = {}  # IP -> deque of time.monotonic() of their recent questions
-_daily = {"day": None, "count": 0}  # answers started on this UTC date
-
 
 def client_ip(request):
-    """The visitor's IP, from the first of these that is set:
+    """The visitor's IP: the last entry of X-Forwarded-For, else the direct peer.
 
-    True-Client-IP, CF-Connecting-IP, the last entry of X-Forwarded-For (the one our
-    own proxy appended; earlier entries can be set by the visitor), the direct peer.
+    Vercel overwrites X-Forwarded-For with the real client IP, so visitors can't fake
+    it. Headers like True-Client-IP aren't used: on Vercel they come from the visitor.
     """
-    for header in ("true-client-ip", "cf-connecting-ip"):
-        value = request.headers.get(header, "").strip()
-        if value:
-            return value
     last = request.headers.get("x-forwarded-for", "").split(",")[-1].strip()
     if last:
         return last
     return request.client.host if request.client else "unknown"
 
 
+def ip_hash(ip):
+    """sha256(IP_HASH_SALT + ip) as hex. Raises 503 if IP_HASH_SALT is unset."""
+    salt = os.getenv("IP_HASH_SALT")
+    if not salt:
+        log.error("IP_HASH_SALT is not set, so no questions are accepted")
+        raise HTTPException(503, "The copilot isn't available right now.")
+    return hashlib.sha256((salt + ip).encode()).hexdigest()
+
+
 def check_limits(ip):
-    """Count one question for this IP and for today, or raise 429 if over a limit.
+    """Count one question for this visitor and for today, or raise 429 if over a limit.
 
-    A rejected question doesn't count against either limit.
+    Both counts are in one transaction: a rejected question counts against neither.
+    Raises 503 if the limits can't be checked, so Gemini is never called unchecked.
     """
-    now = time.monotonic()
-    today = datetime.now(timezone.utc).date()
-    with _limits_lock:
-        # Forget visitors whose questions are all older than the window.
-        for old_ip in [k for k, t in _visitor_times.items() if now - t[-1] >= VISITOR_WINDOW]:
-            del _visitor_times[old_ip]
-        times = _visitor_times.setdefault(ip, deque())
-        while times and now - times[0] >= VISITOR_WINDOW:
-            times.popleft()
-        if len(times) >= VISITOR_LIMIT:
-            retry_after = int(VISITOR_WINDOW - (now - times[0])) + 1
-            log.info("rate limited reason=%s", VISITOR_LIMIT_REASON)
-            raise HTTPException(
-                429, {"reason": VISITOR_LIMIT_REASON}, {"Retry-After": str(retry_after)}
-            )
-
-        if _daily["day"] != today:
-            _daily["day"], _daily["count"] = today, 0
-        if _daily["count"] >= DAILY_ANSWER_CAP:
-            if not times:
-                del _visitor_times[ip]
-            log.info("rate limited reason=%s", DAILY_CAP_REASON)
-            raise HTTPException(429, {"reason": DAILY_CAP_REASON})
-
-        times.append(now)
-        _daily["count"] += 1
+    hashed = ip_hash(ip)
+    try:
+        with _connect() as conn:
+            with conn.transaction():
+                params = {"ip_hash": hashed, "window": VISITOR_WINDOW, "limit": VISITOR_LIMIT}
+                if conn.execute(VISITOR_SQL, params).fetchone() is None:
+                    log.info("rate limited reason=%s", VISITOR_LIMIT_REASON)
+                    retry_after = VISITOR_WINDOW - int(time.time()) % VISITOR_WINDOW
+                    raise HTTPException(
+                        429, {"reason": VISITOR_LIMIT_REASON}, {"Retry-After": str(retry_after)}
+                    )
+                over_cap = (
+                    DAILY_ANSWER_CAP < 1
+                    or conn.execute(DAILY_SQL, {"cap": DAILY_ANSWER_CAP}).fetchone() is None
+                )
+                if over_cap:  # raising here rolls back the visitor's count too
+                    log.info("rate limited reason=%s", DAILY_CAP_REASON)
+                    raise HTTPException(429, {"reason": DAILY_CAP_REASON})
+            if random.random() < CLEANUP_CHANCE:
+                conn.execute(CLEANUP_SQL)
+    except HTTPException:
+        raise
+    except Exception as e:
+        log.error("limit check failed: %s", type(e).__name__)
+        raise HTTPException(503, "The copilot isn't available right now.")
 
 
 class AnswerRequest(BaseModel):
