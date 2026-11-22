@@ -502,6 +502,14 @@
   }
 
   // ---------- Flow ----------
+  // 429 body: {"detail": {"reason": "visitor_limit" | "daily_cap"}}
+  async function limitMessage(res) {
+    let reason = "";
+    try { reason = (await res.json()).detail.reason; } catch {}
+    return reason === "daily_cap"
+      ? "The demo has reached today's limit. Please come back tomorrow."
+      : "You've asked a lot of questions in a short time. Try again in a few minutes.";
+  }
   async function ask(text, retry = false) {
     text = text.trim();
     if (busy || !text || !audience) return;
@@ -515,6 +523,7 @@
         body: JSON.stringify({ question: text, audience: aud }), signal: controller.signal });
       dropSkeleton(sk);
       if (res.status === 400) addError("Please keep your question under 500 characters.", text);
+      else if (res.status === 429) addError(await limitMessage(res), text);
       else if (!res.ok) addError("We couldn't get an answer just now. Try again in a moment.", text);
       else addDraft(normalise(await res.json()), text, aud);
     } catch (e) {

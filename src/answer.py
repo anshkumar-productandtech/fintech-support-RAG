@@ -145,7 +145,9 @@ def _connect():
 def _embed_model():
     from fastembed import TextEmbedding
 
-    return TextEmbedding(EMBED_MODEL)
+    # MODEL_CACHE_DIR: where scripts/download_model.py saved the model. Unset means
+    # fastembed's default cache folder.
+    return TextEmbedding(EMBED_MODEL, cache_dir=os.getenv("MODEL_CACHE_DIR"))
 
 
 @lru_cache(maxsize=1)

@@ -1,0 +1,16 @@
+# Only what the web app needs at runtime (src/app.py and src/answer.py).
+# For the evaluation scripts and tests, install requirements.txt instead.
+# Web app (fastapi, uvicorn, and the packages fastapi pulled in)
+fastapi==0.162.2
+uvicorn==0.54.0
+starlette==1.10.0
+annotated-doc==0.0.7
+opentelemetry-api==1.45.2
+# Embeddings (also installs numpy)
+fastembed==0.9.1
+# Postgres + pgvector
+psycopg[binary]==3.3.9
+pgvector==0.5.1
+python-dotenv==1.2.3
+# Gemini
+google-genai==3.4.0
