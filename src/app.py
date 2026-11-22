@@ -66,8 +66,10 @@ def api_answer(req: AnswerRequest):
         "answered audience=%s refused=%s needs_review=%s seconds=%.1f",
         req.audience, result["refused"], result["needs_review"], result["seconds"],
     )
+    # A flagged answer is never sent: the page shows a hand-off instead.
+    reply = "" if result["needs_review"] else result["text"]
     return {
-        "reply": result["text"],
+        "reply": reply,
         "refused": result["refused"],
         "sources": [
             {
